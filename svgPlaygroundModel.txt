@@ -1,0 +1,17 @@
+<svg width="500" height="470" xmlns="http://www.w3.org/2000/svg" class="playgroundSVG">
+ <g>
+  <title>Vrstva 1</title>
+  <circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="249.99998" cy="398.25" r="200" id="svg_8"/>
+  <line id="svg_1" y2="399" x2="50" y1="470" x1="50" stroke-width="4" stroke="#000000" fill="none"/>
+  <line id="svg_2" y2="397.5" x2="450" y1="470" x1="450" stroke-width="4" stroke="#000000" fill="none"/>
+  <clipPath id="cut-off-bottom">
+   <rect id="svg_5" height="100" width="200" y="0" x="0"/>
+  </clipPath>
+  <rect fill="#ffffff" stroke="#000000" stroke-width="0" x="137.5" y="355" width="197.5" height="76.5" id="svg_9"/>
+  <rect fill="#ffffff" stroke="#000000" stroke-width="0" x="52" y="391" width="396" height="80" id="svg_10"/>
+  <circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="250" cy="278" r="38.3054" id="svg_13"/>
+  <rect fill="#ffffff" stroke="#000000" stroke-width="4" x="190" y="278" width="120" height="190" id="svg_11"/>
+  <circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="250.00001" cy="1.75" r="65.1795" id="svg_14"/>
+  <rect fill="none" stroke="#000000" stroke-width="4" x="-0.5" y="-0.5" width="501" height="471" id="svg_15"/>
+ </g>
+</svg>

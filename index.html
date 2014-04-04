@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+
+<html lang="cz">
+<head>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="jquery/jquery-ui-1.10.3.custom.min.css" />
+    <link rel="stylesheet" href="basketballNotepad.css" />
+    
+    <script src="libs/jquery-1.11.0.min.js"></script>
+    <script src="libs/jquery-ui-1.10.4.custom.min.js"></script>
+
+    <script src="View.js"></script>
+    <script src="Data.js"></script>
+    <script src="basketballNotepad.js"></script>
+    
+    <title>Basketbalový zápis ze zápasu</title>
+
+    <script type="text/javascript">
+        function loadBNP() {
+            $("#basketballNotepad").basketballNotepad();
+        }
+    </script>
+
+</head>
+<body onload="loadBNP();">
+    
+    <div id="basketballNotepad">
+
+    </div>
+
+</body>
+</html>

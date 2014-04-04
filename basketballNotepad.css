@@ -1,0 +1,127 @@
+﻿/*******************************************************************************************************************/
+/***************************************** CSS *********************************************************************/
+/*******************************************************************************************************************/
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.mainWindow {
+    height: 700px;
+    width: 1200px;
+    border: 2px black solid;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+}
+
+.workPlace {
+    margin-top: 100px;
+    margin-left: 100px;
+    width: 1100px;
+    height: 600px;
+}
+
+/*******************************************************************************************************************/
+
+.mainMenu {
+    float: left;
+    background-color: #CC99CC;
+    position: absolute;
+    width: 1200px;
+    height: 99px;
+    border-bottom: 1px black solid;
+}
+
+.mainMenuButton {
+    float: left;
+    height: 84px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 5px;
+    margin-left: 14px;
+    line-height: 90px;
+    font-size: 40px;
+    text-align: center;
+    vertical-align: middle;
+    border: 3px black solid;
+    border-radius: 15px;
+    cursor: pointer;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.mainMenuButtonNormal {
+    background-color: #660066;
+    color: #FFF;
+}
+
+.mainMenuButtonChanging {
+    background-color: #FFF;
+    color: black;
+}
+
+/*******************************************************************************************************************/
+
+.siteMenu {
+    float: left;
+    position: absolute;
+    background-color: #FFF;
+    margin-top: 100px;
+    width: 98px;
+    height: 598px;
+    border: 1px black solid;
+}
+
+.playerButton {
+    height: 84px;
+    width: 84px;
+    line-height: 90px;
+    font-size: 60px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 15px;
+    cursor: pointer;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.siteMenuButton {
+    margin-top: 25px;
+    margin-left: 5px;
+}
+
+.playerListButton {
+    float:left;
+    margin-top:25px;
+    margin-left:25px;
+}
+
+.siteMenuButtonSelected {
+    background-color: #CC99CC;
+    border: 3px black solid;
+    color:white;
+}
+
+.siteMenuButtonUnselected {
+    background-color: #660066;
+    border: 3px black solid;
+    color:white;
+}
+
+.siteMenuButtonBlank {
+    background-color:white;
+    color:gray;
+    border: 3px dotted gray;
+
+}
