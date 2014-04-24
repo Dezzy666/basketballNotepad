@@ -42,15 +42,77 @@ function View(element, prefix) {
         },
         "mainMenuButtonChanging");
 
-    this._insertButtonIntoMainMenu("Konec utkání", "faulMinus",
+    this._hideButton("changingStarts");
+
+    this._insertButtonIntoMainMenu("Konec utkání", "endOfGame",
         function (params) {
 
         },
         "mainMenuButtonNormal");
 
+    this._hideButton("endOfGame");
+
     this._insertWorkPlace();
 
     this.insertDialog();
+
+    this.createInitialLoadDataScreen();
+}
+
+/**
+* Creates initial loading data screen
+*
+* @method createInitialLoadDataScreen
+* @author Jan Herzan
+*/
+View.prototype.createInitialLoadDataScreen = function () {
+    this.clearWorkPlace();
+    this.loadDataFromWebWindow();
+    this.loadDataFromFileWindow();
+    this.noLoadDataWindow();
+}
+
+/**
+* Creates window for loading data from web
+*
+* @method loadDataFromWebWindow
+* @author Jan Herzan
+*/
+View.prototype.loadDataFromWebWindow = function () {
+    this.workPlace.append('<div class="loadScreenLoadData loadScreanFromWeb" id="' + this.prefix + 'loadDataFromWeb' + '"></div>');
+    var div = $('#' + this.prefix + 'loadDataFromWeb');
+
+
+    if (navigator.onLine) {
+        div.append('<br>Přihlásím se ke svému účtu na webu.' +
+            '<form><input type="text"placeholder="Login"><input type="password" placeholder="Heslo"></form>' +
+            '<div class="loadScreenButton">Přihlásit</div>');
+    } else {
+        div.append('Aktuálně nejste online<BR> Nelze stáhnout data týmu');
+    }
+}
+
+/**
+* Creates window for loading data from file
+*
+* @method View
+* @author Jan Herzan
+*/
+View.prototype.loadDataFromFileWindow = function () {
+    this.workPlace.append('<div class="loadScreenLoadData loadScreanFromFile" id="' + this.prefix + 'loadDataFromFile' + '"><br>Nahrát data hráčů ze souboru na lokálním disku.<BR>' +
+        '<form id="' + this.prefix + 'loadFromFile"><input type="file"></form>' +
+        '<div class="loadScreenButton">Nahrát soubor</div></div>');
+}
+
+/**
+* Creates window for no data loading.
+*
+* @method View
+* @author Jan Herzan
+*/
+View.prototype.noLoadDataWindow = function () {
+    this.workPlace.append('<div class="loadScreenLoadData loadScreanNoData" id="' + this.prefix + 'noLoadData' + '">Nemám data týmu.<br> Přeji si zaznamenávat hru pouze s čísly hráčů a jména přiřadím až zpětně.' +
+        '<div class="loadScreenButton" id="' + this.prefix + 'noDataLoad">Hrát pouze s čísly</div></div>');
 }
 
 

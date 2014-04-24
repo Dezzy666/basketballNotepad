@@ -183,3 +183,60 @@ body {
     margin-top:5px;
     margin-right:10px;
 }
+
+/*******************************************************************************************************************/
+
+.loadScreenLoadData {
+    position:absolute;
+    margin-top:20px;
+    margin-left:20px;
+    border:3px solid black;
+    width:240px;
+    height:400px;
+    padding-left:30px;
+    padding-right:30px;
+    padding-top:100px;
+    font-size:20px;
+    text-align:center;
+    transition: all 2s;
+}
+
+.loadScreanFromWeb {
+    top:27px;
+    left:27px;
+}
+
+.loadScreanFromFile {
+    top:27px;
+    left:377px;
+}
+
+.loadScreanNoData {
+    top:27px;
+    left:727px;
+}
+
+.loadScreenLoadData:hover {
+    margin-top:0px;
+    margin-left:0px;
+    height:440px;
+    transition: all 2s;
+    padding-left:50px;
+    padding-right:50px;
+}
+
+.loadScreenButton {
+    background-color: #660066;
+    border: 3px black solid;
+    color: white;
+    cursor: pointer;
+    border-radius: 15px;
+    height:50px;
+    text-align:center;
+    font-size:25px;
+    line-height:50px;
+    vertical-align:middle;
+    position:absolute;
+    width:240px;
+    top:350px;
+}
