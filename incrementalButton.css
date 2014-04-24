@@ -19,3 +19,37 @@
     user-select: none;
 }
 
+.incrementalButtonMainAnimation {
+    animation: turnAround 2s;
+}
+
+/* Standard syntax */
+@keyframes turnAround
+{
+from {transform:rotate(0deg);}
+25% {transform:rotate(90deg);}
+50% {transform:rotate(180deg);}
+75% {transform:rotate(270deg);}
+to {transform:rotate(360deg);}
+}
+
+/* Mozila */
+@-moz-keyframes turnAround
+{
+from {-moz-transform:rotate(0deg);}
+25% {-moz-transform:rotate(90deg);}
+50% {-moz-transform:rotate(180deg);}
+75% {-moz-transform:rotate(270deg);}
+to {-moz-transform:rotate(360deg);}
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes turnAround
+{
+from {-webkit-transform:rotate(0deg);}
+25% {-webkit-transform:rotate(90deg);}
+50% {-webkit-transform:rotate(180deg);}
+75% {-webkit-transform:rotate(270deg);}
+to {-webkit-transform:rotate(360deg);}
+}
+
