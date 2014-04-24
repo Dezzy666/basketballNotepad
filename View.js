@@ -102,7 +102,9 @@ View.prototype.createEndSaveDataInFielWindow = function () {
         '<div class="loadScreenButton" id="' + this.prefix + 'SaveDataInFileButton">Stáhnout soubor</div>' +
         '</div>');
 
-
+    $('#' + this.prefix + 'SaveDataInFileButton').on('click', (function (e) {
+        this.data.exportDataInLink("exportMatch.json");
+    }).bind(this));
 }
 
 /**

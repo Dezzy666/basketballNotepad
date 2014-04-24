@@ -98,3 +98,21 @@ Data.prototype.getDataOfPlayer = function (playerNumber) {
 
     return undefined;
 }
+
+/**
+* Exports data into JSON file
+*
+* @method exportDataInFile
+* @author Jan Herzan
+* @param {String} File name
+*/
+Data.prototype.exportDataInLink = function (filename) {
+    var exportedData = JSON.stringify(this.players);
+    var file = document.createElement('a');
+    file.download = filename;
+    file.href = "data:text/plain;charset=UTF-8," + exportedData;
+    file.style.display = "none";
+    document.body.appendChild(file);
+    file.click();
+
+}
