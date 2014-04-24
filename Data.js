@@ -28,6 +28,38 @@ Data.prototype.loadEmptyNumbers = function () {
 }
 
 /**
+* Loads data from JSON
+*
+* @method loadDataFromJSON
+* @author Jan Herzan
+* @param {String} data
+* @return if data was loaded successfully
+*/
+Data.prototype.loadDataFromJSON = function (data) {
+    var i, transformedData;
+    try {
+        transformedData = jQuery.parseJSON(data);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    if (transformedData.players !== undefined) {
+        for (i = 0; i < transformedData.players.length; i++) {
+            if (transformedData.players[i].playerNumber !== undefined && transformedData.players[i].playerName !== undefined) {
+                this.players.push(this.createPlayer(transformedData.players[i].playerNumber, transformedData.players[i].playerName));
+            } else {
+                return false;
+            }
+        }
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
+/**
 * Creates data for one player
 *
 * @method createPlayer

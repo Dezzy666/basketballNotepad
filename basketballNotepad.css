@@ -216,17 +216,34 @@ body {
     left:727px;
 }
 
-.loadScreenLoadData:hover {
+.loadScreanFromWeb .loadScreenButton {
+    background-color: #660066;
+
+}
+
+.loadScreanFromFile .loadScreenButton {
+    background-color: gray;
+}
+
+.loadScreanNoData .loadScreenButton {
+    background-color: #660066;
+}
+
+/*.loadScreenLoadData:hover {
     margin-top:0px;
     margin-left:0px;
     height:440px;
+
     transition: all 2s;
+    -moz-transition: all 2s;
+    -webkit-transition: all 2s;
+    -o-transition: all 2s;
+
     padding-left:50px;
     padding-right:50px;
-}
+}*/
 
 .loadScreenButton {
-    background-color: #660066;
     border: 3px black solid;
     color: white;
     cursor: pointer;
@@ -239,4 +256,13 @@ body {
     position:absolute;
     width:240px;
     top:350px;
+}
+
+.loadScreenDropField {
+    border: 2px dotted gray;
+    padding-top:40px;
+    color: gray;
+    text-align:center;
+    height:100px;
+    width:240px;
 }

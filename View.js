@@ -100,8 +100,38 @@ View.prototype.loadDataFromWebWindow = function () {
 */
 View.prototype.loadDataFromFileWindow = function () {
     this.workPlace.append('<div class="loadScreenLoadData loadScreanFromFile" id="' + this.prefix + 'loadDataFromFile' + '"><br>Nahrát data hráčů ze souboru na lokálním disku.<BR>' +
-        '<form id="' + this.prefix + 'loadFromFile"><input type="file"></form>' +
-        '<div class="loadScreenButton">Nahrát soubor</div></div>');
+        '<form id="' + this.prefix + 'loadFromFile"><input type="file" id="' + this.prefix + 'loadFromFilePath"></form>' +
+        '<div class="loadScreenButton" id="' + this.prefix + 'LoadDataFromFileButton">Nahrát soubor</div></div>');
+
+    $('#' + this.prefix + 'loadFromFilePath').on('change', (function (e) {
+        var reader = new FileReader();
+        reader.onloadend = (function (evt) {
+            if (evt.target.readyState == FileReader.DONE) {
+                $('#' + this.prefix + 'LoadDataFromFileButton').css({ backgroundColor: "#660066" });
+                this.tempData = evt.target.result;
+            }
+        }).bind(this);
+
+        reader.onerror = (function (evt) {
+            if (evt.target.readyState == FileReader.DONE) {
+                $('#' + this.prefix + 'LoadDataFromFileButton').css({ backgroundColor: "red" });
+                $('#' + this.prefix + 'LoadDataFromFileButton').html("Soubor nelze nahrát");
+            }
+        }).bind(this);
+
+        reader.readAsText(e.target.files[0]);
+
+    }).bind(this));
+
+    $('#' + this.prefix + 'LoadDataFromFileButton').on('click', (function (e) {
+        if (this.tempData !== undefined) {
+            if (!this.data.loadDataFromJSON(this.tempData)) {
+                alert("Data se nepodařilo načíst");
+                return;
+            }
+            this.initializeAfterDataLoaded();
+        }
+    }).bind(this));
 }
 
 /**
@@ -116,12 +146,21 @@ View.prototype.noLoadDataWindow = function () {
 
     $('#' + this.prefix + 'noDataLoad').on('click', (function (e) {
         this.data.loadEmptyNumbers();
-        this.showPlayersList();
-        this._showButton("endOfGame");
-        this._showButton("changingStarts");
+        this.initializeAfterDataLoaded();
     }).bind(this));
 }
 
+/**
+* Initialize application after data was loaded.
+*
+* @method initializeAfterDataLoaded
+* @author Jan Herzan
+*/
+View.prototype.initializeAfterDataLoaded = function () {
+    this.showPlayersList();
+    this._showButton("endOfGame");
+    this._showButton("changingStarts");
+}
 
 /**
 * Clears the main work place
@@ -465,7 +504,7 @@ View.prototype.insertPlayground = function (space) {
         } else {
             svgPicture = svgPicture + '<circle cx="' + actualShot.x + '" cy="' + actualShot.y + '" r="2" stroke="red" stroke-width="1" fill="red" />';
         }
-            
+
     }
     svgPicture = svgPicture + '</g>' +
         '</svg>'
@@ -473,12 +512,12 @@ View.prototype.insertPlayground = function (space) {
     space.append(svgPicture);
 
     //$('#' + this.prefix + 'playGroundSVG' + this.actualShowedPlayer.playerNumber)
-        space.on('click',
-        (function (e) {
-            var positionX = e.pageX - $('#' + e.currentTarget.id).offset().left;
-            var positionY = e.pageY - $('#' + e.currentTarget.id).offset().top;
-            this.createShotSuccDialog(positionX, positionY);
-        }).bind(this));
+    space.on('click',
+    (function (e) {
+        var positionX = e.pageX - $('#' + e.currentTarget.id).offset().left;
+        var positionY = e.pageY - $('#' + e.currentTarget.id).offset().top;
+        this.createShotSuccDialog(positionX, positionY);
+    }).bind(this));
 
 };
 
