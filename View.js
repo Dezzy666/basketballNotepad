@@ -113,6 +113,13 @@ View.prototype.loadDataFromFileWindow = function () {
 View.prototype.noLoadDataWindow = function () {
     this.workPlace.append('<div class="loadScreenLoadData loadScreanNoData" id="' + this.prefix + 'noLoadData' + '">Nemám data týmu.<br> Přeji si zaznamenávat hru pouze s čísly hráčů a jména přiřadím až zpětně.' +
         '<div class="loadScreenButton" id="' + this.prefix + 'noDataLoad">Hrát pouze s čísly</div></div>');
+
+    $('#' + this.prefix + 'noDataLoad').on('click', (function (e) {
+        this.data.loadEmptyNumbers();
+        this.showPlayersList();
+        this._showButton("endOfGame");
+        this._showButton("changingStarts");
+    }).bind(this));
 }
 
 
