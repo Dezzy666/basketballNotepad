@@ -12,18 +12,19 @@
 */
 function Data() {
     this.players = [];
-    this.players.push(this.createPlayer(4, "Name4"));
-    this.players.push(this.createPlayer(5, "Name5"));
-    this.players.push(this.createPlayer(6, "Name6"));
-    this.players.push(this.createPlayer(7, "Name7"));
-    this.players.push(this.createPlayer(8, "Name8"));
-    this.players.push(this.createPlayer(9, "Name9"));
-    this.players.push(this.createPlayer(10, "Name10"));
-    this.players.push(this.createPlayer(11, "Name11"));
-    this.players.push(this.createPlayer(12, "Name12"));
-    this.players.push(this.createPlayer(13, "Name13"));
-    this.players.push(this.createPlayer(14, "Name14"));
-    this.players.push(this.createPlayer(15, "Name15"));
+}
+
+/**
+* Adds players without names
+*
+* @method loadEmptyNumbers
+* @author Jan Herzan
+*/
+Data.prototype.loadEmptyNumbers = function () {
+    var i;
+    for (i = 4; i < 26; i++) {
+        this.players.push(this.createPlayer(i, "Hráč " + i));
+    }
 }
 
 /**
@@ -35,7 +36,7 @@ function Data() {
 * @param Players name
 */
 Data.prototype.createPlayer = function (playerNumber, playerName) {
-    return { playerNumber: playerNumber, name: playerName, faulPlus: 1, faulMinus: 2, gain: 2, loss: 3, reboundO: 3, reboundD: 2, penaltsGetted: 5, penaltsScored: 2, shots: [{ x: 100, y: 130, scored: true }, { x: 100, y: 130, scored: true }], shotsUnderBasket: 2, shotsUnderBasketScored: 2 };
+    return { playerNumber: playerNumber, name: playerName, faulPlus: 0, faulMinus: 0, gain: 0, loss: 0, reboundO: 0, reboundD: 0, penaltsGetted: 0, penaltsScored: 0, shots: [], shotsUnderBasket: 0, shotsUnderBasketScored: 0 };
 }
 
 /**
