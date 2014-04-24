@@ -25,7 +25,7 @@ function View(element, prefix) {
     this._insertSiteMenu();
 
     $(window).on('beforeunload', function () {
-        return 'Are you sure you want to leave?';
+        return 'Opravdu chcete opustit stránku? Veškerá data budou ztracena.';
     });
 
     this._insertButtonIntoMainMenu("Střídání ukončeno", "changingEnds",
