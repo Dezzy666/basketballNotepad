@@ -46,7 +46,8 @@ function View(element, prefix) {
 
     this._insertButtonIntoMainMenu("Konec utkání", "endOfGame",
         function (params) {
-
+            this.clearWorkPlace();
+            this.createEndingScreen();
         },
         "mainMenuButtonNormal");
 
@@ -57,6 +58,51 @@ function View(element, prefix) {
     this.insertDialog();
 
     this.createInitialLoadDataScreen();
+}
+
+/**
+* Creates ending screen
+*
+* @method createEndingScreen
+* @author Jan Herzan
+*/
+View.prototype.createEndingScreen = function () {
+    this.createEndSendDataOnWebWindow();
+    this.createEndSaveDataInFielWindow();
+}
+
+/**
+* Creates ending dialog for save data on web
+*
+* @method createEndSendDataOnWebWindow
+* @author Jan Herzan
+*/
+View.prototype.createEndSendDataOnWebWindow = function () {
+    this.workPlace.append('<div class="loadScreenLoadData loadScreanFromWeb" id="' + this.prefix + 'loadDataFromWeb' + '"></div>');
+    var div = $('#' + this.prefix + 'loadDataFromWeb');
+
+    if (navigator.onLine) {
+        div.append('<br>Přihlásit se ke svému účtu na webu.' +
+            '<form><input type="text"placeholder="Login"><input type="password" placeholder="Heslo"></form>' +
+            '<div class="loadScreenButton">Přihlásit</div>');
+    } else {
+        div.append('Aktuálně nejste online<BR> Nelze nahrát data.');
+    }
+}
+
+/**
+* Creates ending dialog for save data in file
+*
+* @method createEndSaveDataInFileWindow
+* @author Jan Herzan
+*/
+View.prototype.createEndSaveDataInFielWindow = function () {
+    this.workPlace.append('<div class="loadScreenLoadData saveDataInFile" id="' + this.prefix + 'loadDataFromWeb' + '">' +
+        'Stáhnout výsledek utkání v souboru.' +
+        '<div class="loadScreenButton" id="' + this.prefix + 'SaveDataInFileButton">Stáhnout soubor</div>' +
+        '</div>');
+
+
 }
 
 /**
@@ -84,11 +130,11 @@ View.prototype.loadDataFromWebWindow = function () {
 
 
     if (navigator.onLine) {
-        div.append('<br>Přihlásím se ke svému účtu na webu.' +
+        div.append('<br>Přihlásit se ke svému účtu na webu.' +
             '<form><input type="text"placeholder="Login"><input type="password" placeholder="Heslo"></form>' +
             '<div class="loadScreenButton">Přihlásit</div>');
     } else {
-        div.append('Aktuálně nejste online<BR> Nelze stáhnout data týmu');
+        div.append('Aktuálně nejste online<BR> Nelze stáhnout data');
     }
 }
 

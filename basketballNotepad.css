@@ -216,6 +216,11 @@ body {
     left:727px;
 }
 
+.saveDataInFile {
+    top:27px;
+    left:377px;
+}
+
 .loadScreanFromWeb .loadScreenButton {
     background-color: #660066;
 
@@ -226,6 +231,11 @@ body {
 }
 
 .loadScreanNoData .loadScreenButton {
+    background-color: #660066;
+}
+
+
+.saveDataInFile .loadScreenButton {
     background-color: #660066;
 }
 
