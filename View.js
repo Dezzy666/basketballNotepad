@@ -17,48 +17,63 @@ function View(element, prefix) {
     this.mainMenu = undefined;
     this.siteMenu = undefined;
 
+    this.actualShowedPlayer = undefined;
+
     this.data = new Data();
 
     this._insertMainMenu();
     this._insertSiteMenu();
 
-    var thisInstance = this;
+    $(window).on('beforeunload', function () {
+        return 'Are you sure you want to leave?';
+    });
 
-    this._insertButtonIntoMainMenu("Střídání ukončeno", "changingEnds", function (params) {
-        thisInstance._hideButton("changingEnds");
-        thisInstance._showButton("changingStarts");
-        thisInstance._showButton("faulPlus");
-        thisInstance._showButton("faulMinus");
-        thisInstance._showButton("gain");
-        thisInstance._showButton("loss");
-        thisInstance._showButton("reboundO");
-        thisInstance._showButton("reboundD");
-    }, "mainMenuButtonChanging");
+    this._insertButtonIntoMainMenu("Střídání ukončeno", "changingEnds",
+        function (params) {
+
+        },
+        "mainMenuButtonChanging");
 
     this._hideButton("changingEnds");
 
-    this._insertButtonIntoMainMenu("Střídání", "changingStarts", function (params) {
-        thisInstance.showDataForPlayer();
-        thisInstance._showButton("changingEnds");
-        thisInstance._hideButton("changingStarts");
-        thisInstance._hideButton("faulPlus");
-        thisInstance._hideButton("faulMinus");
-        thisInstance._hideButton("gain");
-        thisInstance._hideButton("loss");
-        thisInstance._hideButton("reboundO");
-        thisInstance._hideButton("reboundD");
-    }, "mainMenuButtonChanging");
+    this._insertButtonIntoMainMenu("Střídání", "changingStarts",
+        function (params) {
+            this.showPlayersList();
+        },
+        "mainMenuButtonChanging");
 
-    this._insertButtonIntoMainMenu("Faul +", "faulPlus", function (params) { }, "mainMenuButtonNormal");
-    this._insertButtonIntoMainMenu("Faul -", "faulMinus", function (params) { }, "mainMenuButtonNormal");
-    this._insertButtonIntoMainMenu("Zisk", "gain", function (params) { }, "mainMenuButtonNormal");
-    this._insertButtonIntoMainMenu("Ztráta", "loss", function (params) { }, "mainMenuButtonNormal");
-    this._insertButtonIntoMainMenu("Doskok U.", "reboundO", function (params) { }, "mainMenuButtonNormal");
-    this._insertButtonIntoMainMenu("Doskok O.", "reboundD", function (params) { }, "mainMenuButtonNormal");
+    this._insertButtonIntoMainMenu("Konec utkání", "faulMinus",
+        function (params) {
+
+        },
+        "mainMenuButtonNormal");
 
     this._insertWorkPlace();
 
-    this.showPlayersList();
+    this.insertDialog();
+}
+
+
+/**
+* Clears the main work place
+*
+* @method clearWorkPlace
+* @author Jan Herzán
+*/
+View.prototype.clearWorkPlace = function () {
+    this.workPlace.empty();
+
+    this.actualShowedPlayer = undefined;
+
+    this.workPlace.removeClass('isDropable');
+    this.workPlace.removeClass('dropableUnlimited');
+    this.workPlace.attr("draggable", "false");
+
+    this.siteMenu.removeClass('isDropable');
+    this.siteMenu.attr("draggable", "false");
+
+    this.workPlace.off('dragover', this._dragOverHandlerWorkPlace);
+    this.siteMenu.off('dragover', this._dragOverHandlerSiteMenu);
 }
 
 /**
@@ -68,7 +83,10 @@ function View(element, prefix) {
 * @author Jan Herzan
 */
 View.prototype.showPlayersList = function () {
-    this.workPlace.empty();
+    var view = this;
+    var data = this.data;
+
+    this.clearWorkPlace();
 
     this.workPlace.addClass('isDropable');
     this.workPlace.addClass('dropableUnlimited');
@@ -85,6 +103,10 @@ View.prototype.showPlayersList = function () {
 
     var playerList = this.data.getData();
     for (var i = 0; i < playerList.length; i++) {
+        if ($('#' + this.prefix + 'player' + playerList[i].playerNumber).length !== 0) {
+            continue;
+        }
+
         this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerListButton siteMenuButtonUnselected" draggable="true" ondragstart="">' + playerList[i].playerNumber + '</div>');
         var actualNumber = $('#' + this.prefix + 'player' + playerList[i].playerNumber);
         actualNumber.data('prefix', this.prefix);
@@ -105,7 +127,8 @@ View.prototype.showPlayersList = function () {
         });
 
         actualNumber.on('click', function (s) {
-            console.log("click");
+            var playerNumber = $('#' + s.target.id).data('playerNumber');
+            view.showDataForPlayer(playerNumber);
         });
 
 
@@ -134,13 +157,153 @@ View.prototype._showButton = function (idOfTheButton) {
     $('#' + this.prefix + idOfTheButton).css({ "display": "block" });
 }
 
+/**
+* Insert div of workplace
+*
+* @method _insertWorkPlace
+* @author Jan Herzán
+*/
 View.prototype._insertWorkPlace = function () {
     this.parentElement.append('<div id="' + this.prefix + 'workPlace" class="workPlace"></div>');
     this.workPlace = $('#' + this.prefix + 'workPlace');
 };
 
-View.prototype.showDataForPlayer = function (idOfPlayer) {
+/**
+* Shows data for player
+*
+* @method showDataForPlayer
+* @author Jan Herzán
+* @param {Integer} player number
+*/
+View.prototype.showDataForPlayer = function (playerNumber) {
+    this.clearWorkPlace();
 
+    this.actualShowedPlayer = this.data.getDataOfPlayer(playerNumber);
+
+    this.workPlace.append('<div id="' + this.prefix + 'basicIncrementalButtons' + '" class="basicIncrementalButtons"></div>');
+    var placeForIncrementalButtons = $('#' + this.prefix + 'basicIncrementalButtons');
+
+    placeForIncrementalButtons.append('<div class="faulPlus dataPlayerHeadline">Faul +</div>');
+    placeForIncrementalButtons.append('<div class="faulMinus dataPlayerHeadline">Faul -</div>');
+
+    this.createIncrementalButton('faulPlusIB', playerNumber, placeForIncrementalButtons, "faulPlus");
+    this.createIncrementalFaulButton('faulMinusIB', playerNumber, placeForIncrementalButtons, "faulMinus");
+
+    placeForIncrementalButtons.append('<div class="reboundD dataPlayerHeadline">Doskok obranný</div>');
+    placeForIncrementalButtons.append('<div class="reboundO dataPlayerHeadline">Doskok útočný</div>');
+
+    this.createIncrementalButton('reboundDIB', playerNumber, placeForIncrementalButtons, "reboundD");
+    this.createIncrementalButton('reboundOIB', playerNumber, placeForIncrementalButtons, "reboundO");
+
+    placeForIncrementalButtons.append('<div class="gain dataPlayerHeadline">Zisk</div>');
+    placeForIncrementalButtons.append('<div class="loss dataPlayerHeadline">Ztráta</div>');
+
+    this.createIncrementalButton('gainIB', playerNumber, placeForIncrementalButtons, "gain");
+    this.createIncrementalButton('lossIB', playerNumber, placeForIncrementalButtons, "loss");
+
+    placeForIncrementalButtons.append('<div class="penaltyShots dataPlayerHeadline">Trestné<br>střílení</div>');
+    placeForIncrementalButtons.append('<div class="penaltyShotsSucc dataPlayerHeadline">Trestné střílení úspěšné</div>');
+
+    this.createNonIncrementalButton('penaltyShotsIB', playerNumber, placeForIncrementalButtons, this.createPenaltyShotDialog, "penaltsGetted");
+    this.createNonIncrementalButton('penaltyShotsSuccIB', playerNumber, placeForIncrementalButtons, this.createPenaltyShotDialog, "penaltsScored");
+
+    this.workPlace.append('<div class="name">' + playerNumber + ' |  ' + this.actualShowedPlayer.name + '</div>');
+
+    this.workPlace.append('<div id="' + this.prefix + 'playground' + playerNumber + '" class="playground"></div>');
+
+    this.insertPlayground($('#' + this.prefix + 'playground' + playerNumber));
+
+    this.workPlace.append('<div id="' + this.prefix + 'shotsIncrementalButtons' + playerNumber + '" class="shotsIncrementalButtons"></div>');
+
+    var placeForShotsIncrementalButtons = $('#' + this.prefix + 'shotsIncrementalButtons' + playerNumber);
+
+    placeForShotsIncrementalButtons.append('<div class="shotNear dataPlayerHeadline">Střela z podkoše</div>');
+    this.createNonIncrementalButton('shotNearIB', playerNumber, placeForShotsIncrementalButtons, this.createUnderDeskShotDialog, "shotsUnderBasket");
+    placeForShotsIncrementalButtons.append('<div class="shotNearSucc dataPlayerHeadline">Střela z podkoše úspěšná</div>');
+    this.createNonIncrementalButton('shotNearSuccIB', playerNumber, placeForShotsIncrementalButtons, this.createUnderDeskShotDialog, "shotsUnderBasketScored");
+}
+
+/**
+* Connects two incremental buttons - the value of uppoer bound button cannot be lower than slave button value
+*
+* @method 
+* @author Jan Herzán
+* @param {Object} Upper bound button
+* @param {Object} Slave button
+*/
+View.prototype.connectIncrementalButtons = function (upperBoundButton, slaveButton) {
+    upperBoundButton.incrementalButton("valueChanged", function (value, element) {
+        slaveButton.incrementalButton("option", "maxBound", value);
+        if (slaveButton.incrementalButton("option", "value") > value) {
+            slaveButton.incrementalButton("option", "value", value);
+        }
+    });
+}
+
+/**
+* Creates standard incremental button
+*
+* @method createIncrementalButton
+* @author Jan Herzán
+* @param {String} id of the button
+* @param {Integer} id of the player (player number)
+* @param {Object} Main work place div
+* @param {String} Variable name
+*/
+View.prototype.createIncrementalButton = function (idOfTheButton, idOfPlayer, workPlace, variableName) {
+    workPlace.append('<div class="' + idOfTheButton + '" id="' + this.prefix + idOfTheButton + idOfPlayer + '"></div>');
+    $('#' + this.prefix + idOfTheButton + idOfPlayer).incrementalButton({
+        value: this.actualShowedPlayer[variableName], maxBound: -1,
+        valueChanged: (function (value, element) {
+            this.actualShowedPlayer[variableName] = value;
+        }).bind(this)
+    });
+}
+
+/**
+* Creates non incremental button (button shows dialog after click)
+*
+* @method createNonIncrementalButton
+* @author Jan Herzán
+* @param {String} id of the button
+* @param {Integer} id of the player (player number)
+* @param {Object} Main work playce dive
+* @param {Function} On click callback function
+* @param {String} Variable name
+*/
+View.prototype.createNonIncrementalButton = function (idOfTheButton, idOfPlayer, workPlace, onClickFunction, variableName) {
+    workPlace.append('<div class="' + idOfTheButton + '" id="' + this.prefix + idOfTheButton + idOfPlayer + '"></div>');
+    $('#' + this.prefix + idOfTheButton + idOfPlayer).incrementalButton({
+        value: this.actualShowedPlayer[variableName],
+        incrementalByTap: false, maxBound: -1, onClickEvent: onClickFunction.bind(this)
+    });
+}
+
+/**
+* Creates incremental button with background color changing
+*
+* @method createIncrementalFaulButton
+* @author Jan Herzán
+* @param {String} id of the button
+* @param {Integer} id of the player (player number)
+* @param {Object} Main work place div
+* @param {String} Variable name
+*/
+View.prototype.createIncrementalFaulButton = function (idOfTheButton, idOfPlayer, workPlace, variableName) {
+    workPlace.append('<div class="' + idOfTheButton + '" id="' + this.prefix + idOfTheButton + idOfPlayer + '"></div>');
+    $('#' + this.prefix + idOfTheButton + idOfPlayer).incrementalButton({
+        value: this.actualShowedPlayer[variableName],
+        valueChanged: (function (value, element) {
+            this.actualShowedPlayer[variableName] = value;
+            if (value == 4) {
+                element.css({ "background-color": "orange" });
+            } else if (value == 5) {
+                element.css({ "background-color": "red" });
+            } else {
+                element.css({ "background-color": "green" });
+            }
+        }).bind(this)
+    });
 }
 
 /**
@@ -181,7 +344,7 @@ View.prototype._insertButtonIntoMainMenu = function (content, id, functionality,
     }
 
     $('#' + this.prefix + 'mainMenu').append('<div class="mainMenuButton ' + extraType + '" id="' + this.prefix + id + '">' + content + '</div>');
-    $('#' + this.prefix + id).bind('click', functionality);
+    $('#' + this.prefix + id).bind('click', functionality.bind(this));
 };
 
 /**
@@ -207,8 +370,9 @@ View.prototype._insertButtonIntoSiteMenu = function (content, id, functionality)
 * @param {Object} Div selector
 */
 View.prototype.insertPlayground = function (space) {
-    space.append(
-        '<svg width="500" height="470" xmlns="http://www.w3.org/2000/svg" class="playgroundSVG">' +
+    var i;
+    var actualShot;
+    var svgPicture = '<svg width="500" height="470" xmlns="http://www.w3.org/2000/svg" class="playgroundSVG" id="' + this.prefix + 'playGroundSVG' + this.actualShowedPlayer.playerNumber + '">' +
         '<g>' +
             '<title>Playground</title>' +
             '<circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="249.99998" cy="398.25" r="200" id="svg_8"/>' +
@@ -223,9 +387,30 @@ View.prototype.insertPlayground = function (space) {
             '<rect fill="#ffffff" stroke="#000000" stroke-width="4" x="190" y="278" width="120" height="190" id="svg_11"/>' +
             '<circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="250.00001" cy="1.75" r="65.1795" id="svg_14"/>' +
             '<rect fill="none" stroke="#000000" stroke-width="4" x="-0.5" y="-0.5" width="501" height="471" id="svg_15"/>' +
-        '</g>' +
+            '<rect id="svg_17" height="205" width="201" y="815" x="1276" stroke-width="5" stroke="#000000" fill="none"/>';
+
+    for (i = 0; i < this.actualShowedPlayer.shots.length; i++) {
+        actualShot = this.actualShowedPlayer.shots[i];
+        if (actualShot.scored) {
+            svgPicture = svgPicture + '<circle cx="' + actualShot.x + '" cy="' + actualShot.y + '" r="2" stroke="green" stroke-width="1" fill="green" />';
+        } else {
+            svgPicture = svgPicture + '<circle cx="' + actualShot.x + '" cy="' + actualShot.y + '" r="2" stroke="red" stroke-width="1" fill="red" />';
+        }
+            
+    }
+    svgPicture = svgPicture + '</g>' +
         '</svg>'
-        );
+
+    space.append(svgPicture);
+
+    //$('#' + this.prefix + 'playGroundSVG' + this.actualShowedPlayer.playerNumber)
+        space.on('click',
+        (function (e) {
+            var positionX = e.pageX - $('#' + e.currentTarget.id).offset().left;
+            var positionY = e.pageY - $('#' + e.currentTarget.id).offset().top;
+            this.createShotSuccDialog(positionX, positionY);
+        }).bind(this));
+
 };
 
 /**
@@ -237,7 +422,6 @@ View.prototype.insertPlayground = function (space) {
 */
 View.prototype._dragOverHandlerSiteMenu = function (e) {
     e.preventDefault();
-    console.log("siteDragOver");
     var data = e.originalEvent.dataTransfer.getData("Player");
     var child = $('#' + data);
     var target = $('#' + e.target.id);
@@ -264,7 +448,6 @@ View.prototype._dragOverHandlerSiteMenu = function (e) {
 */
 View.prototype._dropHandlerSiteMenu = function (e) {
     e.preventDefault();
-    console.log("siteDrop");
     var data = e.originalEvent.dataTransfer.getData("Player");
     var child = $('#' + data);
     var target = $('#' + e.target.id);
@@ -289,7 +472,6 @@ View.prototype._dropHandlerSiteMenu = function (e) {
 */
 View.prototype._dragOverHandlerWorkPlace = function (e) {
     e.preventDefault();
-    console.log("siteDragOver");
     var data = e.originalEvent.dataTransfer.getData("Player");
     var child = $('#' + data);
     var target = $('#' + e.target.id);
@@ -314,7 +496,6 @@ View.prototype._dragOverHandlerWorkPlace = function (e) {
 */
 View.prototype._dropHandlerWorkPlace = function (e) {
     e.preventDefault();
-    console.log("WorkDrop");
     var data = e.originalEvent.dataTransfer.getData("Player");
     var child = $('#' + data);
     var target = $('#' + e.target.id);

@@ -20,6 +20,7 @@ body {
     margin-left: 100px;
     width: 1100px;
     height: 600px;
+    position: absolute;
 }
 
 /*******************************************************************************************************************/
@@ -47,7 +48,6 @@ body {
     border: 3px black solid;
     border-radius: 15px;
     cursor: pointer;
-
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -87,7 +87,6 @@ body {
     vertical-align: middle;
     border-radius: 15px;
     cursor: pointer;
-
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -102,26 +101,85 @@ body {
 }
 
 .playerListButton {
-    float:left;
-    margin-top:25px;
-    margin-left:25px;
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
 }
 
 .siteMenuButtonSelected {
     background-color: #CC99CC;
     border: 3px black solid;
-    color:white;
+    color: white;
 }
 
 .siteMenuButtonUnselected {
     background-color: #660066;
     border: 3px black solid;
-    color:white;
+    color: white;
+    transition: all 3s;
+    -moz-transition: all 3s;
+    -webkit-transition: all 3s;
+    -o-transition: all 3s;
 }
 
 .siteMenuButtonBlank {
-    background-color:white;
-    color:gray;
+    background-color: white;
+    color: gray;
     border: 3px dotted gray;
+}
 
+/*******************************************************************************************************************/
+
+.dataPlayerHeadline {
+    font-size: 25px;
+    float:left;
+    width: 200px;
+    text-align:center;
+    margin-top:12px;
+}
+
+.basicIncrementalButtons {
+    width:400px;
+    float:left;
+}
+
+.faulPlus {
+}
+
+.faulMinus {
+}
+
+.incrementalButtonMain {
+    float:left;
+    margin-left:55px;
+    margin-right:55px;
+}
+
+.playground {
+    float:left;
+}
+
+.name {
+    float:left;
+    font-size: 35px;
+    width: 494px;
+    color: blue;
+    height: 50px;
+    border: 3px solid black;
+    line-height:50px;
+    vertical-align:middle;
+}
+
+.shotsIncrementalButtons {
+    width:200px;
+    height:400px;
+    float:left;
+}
+
+/*******************************************************************************************************************/
+
+.penaltyNumberButton {
+    float:left;
+    margin-top:5px;
+    margin-right:10px;
 }
