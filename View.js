@@ -263,7 +263,7 @@ View.prototype.showPlayersList = function () {
             continue;
         }
 
-        this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerListButton siteMenuButtonUnselected" draggable="true" ondragstart="">' + playerList[i].playerNumber + '</div>');
+        this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerListButton siteMenuButtonUnselected" draggable="true">' + playerList[i].playerNumber + '</div>');
         var actualNumber = $('#' + this.prefix + 'player' + playerList[i].playerNumber);
         actualNumber.data('prefix', this.prefix);
         actualNumber.data('playerNumber', playerList[i].playerNumber);
@@ -272,6 +272,23 @@ View.prototype.showPlayersList = function () {
             e.originalEvent.dataTransfer.effectAllowed = 'copy';
             e.originalEvent.dataTransfer.setData('Player', e.originalEvent.target.id);
         });
+
+        actualNumber.on('contextmenu', (function (e) {
+            var currentElement = $('#' + e.currentTarget.id);
+            e.preventDefault();
+
+            if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'workPlace') {
+                if ($('#' + this.prefix + 'siteMenu').children().size() < 5) {
+                    $('#' + this.prefix + 'siteMenu').append(currentElement);
+                    currentElement.removeClass("playerListButton");
+                    currentElement.addClass("siteMenuButton");
+                }
+            } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
+                $('#' + this.prefix + 'workPlace').append(currentElement);
+                currentElement.removeClass("siteMenuButton");
+                currentElement.addClass("playerListButton");
+            }
+        }).bind(this));
 
         actualNumber.on('dragend', function (e) {
             e.preventDefault();
