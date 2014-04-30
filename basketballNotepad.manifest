@@ -1,11 +1,11 @@
 CACHE MANIFEST
-#24-04-20114 17:09
+#30-04-2014 14:50
     
 # soubory urèené k použití offline
 index.html
 basketballNotepad.js
 incrementalButton.js
-yesNoTuppls.js
+yesNoTupple.js
 Data.js
 View.js
 Dialogs.js
