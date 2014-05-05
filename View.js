@@ -228,8 +228,8 @@ View.prototype.clearWorkPlace = function () {
     this.siteMenu.removeClass('isDropable');
     this.siteMenu.attr("draggable", "false");
 
-    this.workPlace.off('dragover', this._dragOverHandlerWorkPlace);
-    this.siteMenu.off('dragover', this._dragOverHandlerSiteMenu);
+    this.workPlace.off();
+    this.siteMenu.off();
 }
 
 /**
@@ -252,9 +252,9 @@ View.prototype.showPlayersList = function () {
     this.siteMenu.attr("draggable", "true");
 
     //this.workPlace.on('drop', this._dropHandlerWorkPlace);
-    this.workPlace.on('dragover', this._dragOverHandlerWorkPlace);
+    this.workPlace.on('dragover', this._dragOverHandlerWorkPlace.bind(this));
     //this.siteMenu.on('drop', this._dropHandlerSiteMenu);
-    this.siteMenu.on('dragover', this._dragOverHandlerSiteMenu);
+    this.siteMenu.on('dragover', this._dragOverHandlerSiteMenu.bind(this));
 
 
     var playerList = this.data.getData();
@@ -280,32 +280,71 @@ View.prototype.showPlayersList = function () {
             if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'workPlace') {
                 if ($('#' + this.prefix + 'siteMenu').children().size() < 5) {
                     $('#' + this.prefix + 'siteMenu').append(currentElement);
-                    currentElement.removeClass("playerListButton");
-                    currentElement.addClass("siteMenuButton");
+                    this.changeButtonClassesAsShadeFromDeck(currentElement);
+                    this.changeButtonClassesToNormalButton(currentElement);
                 }
             } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
                 $('#' + this.prefix + 'workPlace').append(currentElement);
-                currentElement.removeClass("siteMenuButton");
-                currentElement.addClass("playerListButton");
+                this.changeButtonClassesAsShadeFromBoard(currentElement);
+                this.changeButtonClassesToNormalButton(currentElement);
             }
         }).bind(this));
 
-        actualNumber.on('dragend', function (e) {
+        actualNumber.on('dragend', (function (e) {
             e.preventDefault();
             var data = e.originalEvent.dataTransfer.getData("Player");
             var child = $('#' + data);
+            this.changeButtonClassesToNormalButton(child);
 
-            child.removeClass("siteMenuButtonBlank");
-            child.addClass("siteMenuButtonUnselected");
-        });
+        }).bind(this));
 
         actualNumber.on('click', function (s) {
             var playerNumber = $('#' + s.target.id).data('playerNumber');
             view.showDataForPlayer(playerNumber);
         });
-
-
     }
+}
+
+/**
+* This method changes styles for button from shadow to normal. This progress is after timeout
+*
+* @method changeButtonClassesToNormalButton
+* @author Jan Herzan
+* @param {Object} Button
+*/
+View.prototype.changeButtonClassesToNormalButton = function (button) {
+    setTimeout(function () {
+        button.removeClass("siteMenuButtonBlank");
+        button.addClass("siteMenuButtonUnselected");
+    }, 0);
+}
+
+/**
+* This method changes stelys for button from normal to shadow when it is moved from deck
+*
+* @method changeButtonClassesAsShadeFromDeck
+* @author Jan Herzan
+* @param {Object} Button
+*/
+View.prototype.changeButtonClassesAsShadeFromDeck = function (button) {
+    button.removeClass("playerListButton");
+    button.removeClass("siteMenuButtonSelected");
+    button.addClass("siteMenuButton");
+    button.addClass("siteMenuButtonBlank");
+}
+
+/**
+* This method changes styles for button from normal to shadow when it is moved from board
+*
+* @method changeButtonClassesAsShadeFromBoard
+* @author Jan Herzan
+* @param {Object} Button
+*/
+View.prototype.changeButtonClassesAsShadeFromBoard = function (button) {
+    button.removeClass("siteMenuButton");
+    button.removeClass("siteMenuButtonSelected");
+    button.addClass("playerListButton");
+    button.addClass("siteMenuButtonBlank");
 }
 
 /**
@@ -604,10 +643,7 @@ View.prototype._dragOverHandlerSiteMenu = function (e) {
     }
 
     if (target.children().size() < 5) {
-        child.removeClass("playerListButton");
-        child.removeClass("siteMenuButtonSelected");
-        child.addClass("siteMenuButton");
-        child.addClass("siteMenuButtonBlank");
+        this.changeButtonClassesAsShadeFromDeck(child);
         target.append(child);
     }
 }
@@ -630,8 +666,7 @@ View.prototype._dropHandlerSiteMenu = function (e) {
     }
 
     if (target.children().size() < 5) {
-        child.removeClass("siteMenuButtonBlank");
-        child.addClass("siteMenuButtonUnselected");
+        this.changeButtonClassesToNormalButton(child);
         target.append(child);
     }
 }
@@ -653,10 +688,7 @@ View.prototype._dragOverHandlerWorkPlace = function (e) {
         return;
     }
 
-    child.removeClass("siteMenuButton");
-    child.removeClass("siteMenuButtonSelected");
-    child.addClass("playerListButton");
-    child.addClass("siteMenuButtonBlank");
+    this.changeButtonClassesAsShadeFromBoard(child);
     target.append(child);
 }
 
@@ -677,7 +709,6 @@ View.prototype._dropHandlerWorkPlace = function (e) {
         return;
     }
 
-    child.removeClass("siteMenuButtonBlank");
-    child.addClass("siteMenuButtonUnselected");
+    this.changeButtonClassesToNormalButton(child);
     target.append(child);
 }
