@@ -18,11 +18,15 @@ function View(element, prefix) {
     this.siteMenu = undefined;
 
     this.actualShowedPlayer = undefined;
+    this.svnBoardWidth = 500;
+    this.svnBoardHeight = 470;
 
     this.data = new Data();
 
     this._insertMainMenu();
     this._insertSiteMenu();
+
+    this.turnOfTheBoard = 0;
 
     $(window).on('beforeunload', function () {
         return 'Opravdu chcete opustit stránku? Veškerá data budou ztracena.';
@@ -419,7 +423,8 @@ View.prototype.showDataForPlayer = function (playerNumber) {
     this.createNonIncrementalButton('penaltyShotsIB', playerNumber, placeForIncrementalButtons, this.createPenaltyShotDialog, "penaltsGetted");
     this.createNonIncrementalButton('penaltyShotsSuccIB', playerNumber, placeForIncrementalButtons, this.createPenaltyShotDialog, "penaltsScored");
 
-    this.workPlace.append('<div class="name">' + playerNumber + ' |  ' + this.actualShowedPlayer.name + '</div>');
+    this.workPlace.append('<div class="name" id="' + this.prefix + 'nameOfPlayer">' + playerNumber + ' |  ' + this.actualShowedPlayer.name + '</div>');
+    this.setPlayerNameBoxClass();
 
     this.workPlace.append('<div id="' + this.prefix + 'playground' + playerNumber + '" class="playground"></div>');
 
@@ -433,6 +438,68 @@ View.prototype.showDataForPlayer = function (playerNumber) {
     this.createNonIncrementalButton('shotNearIB', playerNumber, placeForShotsIncrementalButtons, this.createUnderDeskShotDialog, "shotsUnderBasket");
     placeForShotsIncrementalButtons.append('<div class="shotNearSucc dataPlayerHeadline">Střela z podkoše úspěšná</div>');
     this.createNonIncrementalButton('shotNearSuccIB', playerNumber, placeForShotsIncrementalButtons, this.createUnderDeskShotDialog, "shotsUnderBasketScored");
+
+    this.createFunctionalButtons();
+
+}
+
+/**
+* Recounts the position of the shot
+*
+* @method recountPositionOfTheShot
+* @author Jan Herzan
+* @param {Integer} Position of X
+* @param {Integer} Position of Y
+* @return {Object} Object of recounted position
+*/
+View.prototype.recountPositionOfTheShot = function (positionX, positionY) {
+    switch (this.turnOfTheBoard) {
+        case 0:
+            return { positionX: positionX, positionY: positionY };
+        case 1:
+            return { positionX: positionY, positionY: this.svnBoardWidth - positionX - 30 };
+        case 2:
+            return { positionX: this.svnBoardWidth - positionX, positionY: this.svnBoardHeight - positionY };
+        case 3:
+            return { positionX: this.svnBoardHeight - positionY + 30, positionY: positionX };
+    }
+    return null;
+}
+
+/**
+* Creates the buttons for turning the board
+*
+* @method createFunctionalButtons
+* @author Jan Herzan
+*/
+View.prototype.createFunctionalButtons = function () {
+    this.workPlace.append('<div class="arrowButton" id="' + this.prefix + 'arrowLeft">y</div>');
+
+    $('#' + this.prefix + 'arrowLeft').on('click', (function (e) {
+        this.turnBoardLeft();
+    }).bind(this));
+
+    this.workPlace.append('<div class="arrowButton" id="' + this.prefix + 'arrowRight">z</div>');
+
+    $('#' + this.prefix + 'arrowRight').on('click', (function (e) {
+        this.turnBoardRight();
+    }).bind(this));
+}
+
+/**
+* Set classes for name box
+*
+* @method setPlayerNameBoxClass
+* @author Jan Herzan
+*/
+View.prototype.setPlayerNameBoxClass = function () {
+    if (this.turnOfTheBoard % 2 == 0) {
+        $('#' + this.prefix + 'nameOfPlayer').removeClass("name-leftRight");
+        $('#' + this.prefix + 'nameOfPlayer').addClass("name-normal");
+    } else {
+        $('#' + this.prefix + 'nameOfPlayer').addClass("name-leftRight");
+        $('#' + this.prefix + 'nameOfPlayer').removeClass("name-normal");
+    }
 }
 
 /**
@@ -556,7 +623,7 @@ View.prototype._insertButtonIntoMainMenu = function (content, id, functionality,
     }
 
     $('#' + this.prefix + 'mainMenu').append('<div class="mainMenuButton ' + extraType + '" id="' + this.prefix + id + '">' + content + '</div>');
-    $('#' + this.prefix + id).bind('click', functionality.bind(this));
+    $('#' + this.prefix + id).on('click', functionality.bind(this));
 };
 
 /**
@@ -571,58 +638,7 @@ View.prototype._insertButtonIntoMainMenu = function (content, id, functionality,
 */
 View.prototype._insertButtonIntoSiteMenu = function (content, id, functionality) {
     $('#' + this.prefix + 'siteMenu').append('<div class="playerButton siteMenuButton" id="' + this.prefix + id + '">' + content + '</div>');
-    $('#' + this.prefix + id).bind('click', functionality);
-};
-
-/**
-* Insert playground into div.
-*
-* @method insertPlayground
-* @author Jan Herzan
-* @param {Object} Div selector
-*/
-View.prototype.insertPlayground = function (space) {
-    var i;
-    var actualShot;
-    var svgPicture = '<svg width="500" height="470" xmlns="http://www.w3.org/2000/svg" class="playgroundSVG" id="' + this.prefix + 'playGroundSVG' + this.actualShowedPlayer.playerNumber + '">' +
-        '<g>' +
-            '<title>Playground</title>' +
-            '<circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="249.99998" cy="398.25" r="200" id="svg_8"/>' +
-            '<line id="svg_1" y2="399" x2="50" y1="470" x1="50" stroke-width="4" stroke="#000000" fill="none"/>' +
-            '<line id="svg_2" y2="397.5" x2="450" y1="470" x1="450" stroke-width="4" stroke="#000000" fill="none"/>' +
-            '<clipPath id="cut-off-bottom">' +
-                '<rect id="svg_5" height="100" width="200" y="0" x="0"/>' +
-            '</clipPath>' +
-            '<rect fill="#ffffff" stroke="#000000" stroke-width="0" x="137.5" y="355" width="197.5" height="76.5" id="svg_9"/>' +
-            '<rect fill="#ffffff" stroke="#000000" stroke-width="0" x="52" y="391" width="396" height="80" id="svg_10"/>' +
-            '<circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="250" cy="278" r="38.3054" id="svg_13"/>' +
-            '<rect fill="#ffffff" stroke="#000000" stroke-width="4" x="190" y="278" width="120" height="190" id="svg_11"/>' +
-            '<circle fill="#ffffff" stroke="#000000" stroke-width="4" cx="250.00001" cy="1.75" r="65.1795" id="svg_14"/>' +
-            '<rect fill="none" stroke="#000000" stroke-width="4" x="-0.5" y="-0.5" width="501" height="471" id="svg_15"/>' +
-            '<rect id="svg_17" height="205" width="201" y="815" x="1276" stroke-width="5" stroke="#000000" fill="none"/>';
-
-    for (i = 0; i < this.actualShowedPlayer.shots.length; i++) {
-        actualShot = this.actualShowedPlayer.shots[i];
-        if (actualShot.scored) {
-            svgPicture = svgPicture + '<circle cx="' + actualShot.x + '" cy="' + actualShot.y + '" r="2" stroke="green" stroke-width="1" fill="green" />';
-        } else {
-            svgPicture = svgPicture + '<circle cx="' + actualShot.x + '" cy="' + actualShot.y + '" r="2" stroke="red" stroke-width="1" fill="red" />';
-        }
-
-    }
-    svgPicture = svgPicture + '</g>' +
-        '</svg>'
-
-    space.append(svgPicture);
-
-    //$('#' + this.prefix + 'playGroundSVG' + this.actualShowedPlayer.playerNumber)
-    space.on('click',
-    (function (e) {
-        var positionX = e.pageX - $('#' + e.currentTarget.id).offset().left;
-        var positionY = e.pageY - $('#' + e.currentTarget.id).offset().top;
-        this.createShotSuccDialog(positionX, positionY);
-    }).bind(this));
-
+    $('#' + this.prefix + id).on('click', functionality.bind(this));
 };
 
 /**

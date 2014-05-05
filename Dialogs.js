@@ -170,12 +170,13 @@ View.prototype.stateChangedShot = function (value) {
 * @param {Integer} Position of shoter Y
 */
 View.prototype.createShotSuccDialog = function (positionX, positionY) {
+    var recountedPosition = this.recountPositionOfTheShot(positionX, positionY);
     this.clearDialogElement();
     this.createYesNoTupple(1, (function (value) {
         if (this.yesNoTupples[0].yesNoTupple("option", "value") === -1) {
             return;
         }
-        this.actualShowedPlayer.shots.push({ x: positionX, y: positionY, scored: this.yesNoTupples[0].yesNoTupple("option", "value") === 1 });
+        this.actualShowedPlayer.shots.push({ x: recountedPosition.positionX, y: recountedPosition.positionY, scored: this.yesNoTupples[0].yesNoTupple("option", "value") === 1 });
         this.showDataForPlayer(this.actualShowedPlayer.playerNumber);
         this.dialogElement.dialog("close");
     }).bind(this));
