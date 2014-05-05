@@ -1,6 +1,20 @@
 CACHE MANIFEST
-#30-04-2014 14:50
+#30-04-2014 14:51
+
+CACHE:
+#obrazky
+libs/images/ui-bg_highlight-soft_75_CC99CC_1x100.png
+libs/images/ui-icons_888888_256x240.png
+
+#Fonty
+fonts/Arrows.otf
+fonts/Arrows.tff
     
+#knihovny
+libs/jquery-1.11.0.min.js
+libs/jquery-ui-1.10.4.custom.min.css
+libs/jquery-ui-1.10.4.custom.min.js
+
 # soubory urèené k použití offline
 index.html
 basketballNotepad.js
@@ -10,6 +24,7 @@ Data.js
 View.js
 Dialogs.js
 
+#CSS styly
 basketballNotepad.css
 yesNoTupple.css
 incrementalButton.css
