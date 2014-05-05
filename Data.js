@@ -25,7 +25,7 @@ Data.prototype.loadEmptyNumbers = function () {
     for (i = 4; i < 26; i++) {
         this.players.push(this.createPlayer(i, "Hráč " + i));
     }
-}
+};
 
 /**
 * Loads data from JSON
@@ -57,7 +57,7 @@ Data.prototype.loadDataFromJSON = function (data) {
         return false;
     }
 
-}
+};
 
 /**
 * Creates data for one player
@@ -69,7 +69,7 @@ Data.prototype.loadDataFromJSON = function (data) {
 */
 Data.prototype.createPlayer = function (playerNumber, playerName) {
     return { playerNumber: playerNumber, name: playerName, faulPlus: 0, faulMinus: 0, gain: 0, loss: 0, reboundO: 0, reboundD: 0, penaltsGetted: 0, penaltsScored: 0, shots: [], shotsUnderBasket: 0, shotsUnderBasketScored: 0 };
-}
+};
 
 /**
 * Returns data of players
@@ -79,7 +79,7 @@ Data.prototype.createPlayer = function (playerNumber, playerName) {
 */
 Data.prototype.getData = function () {
     return this.players;
-}
+};
 
 /**
 * Returns data of one player
@@ -97,7 +97,7 @@ Data.prototype.getDataOfPlayer = function (playerNumber) {
     }
 
     return undefined;
-}
+};
 
 /**
 * Exports data into JSON file
@@ -115,4 +115,4 @@ Data.prototype.exportDataInLink = function (filename) {
     document.body.appendChild(file);
     file.click();
 
-}
+};

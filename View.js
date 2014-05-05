@@ -73,7 +73,7 @@ function View(element, prefix) {
 View.prototype.createEndingScreen = function () {
     this.createEndSendDataOnWebWindow();
     this.createEndSaveDataInFielWindow();
-}
+};
 
 /**
 * Creates ending dialog for save data on web
@@ -92,7 +92,7 @@ View.prototype.createEndSendDataOnWebWindow = function () {
     } else {
         div.append('Aktuálně nejste online<BR> Nelze nahrát data.');
     }
-}
+};
 
 /**
 * Creates ending dialog for save data in file
@@ -109,7 +109,7 @@ View.prototype.createEndSaveDataInFielWindow = function () {
     $('#' + this.prefix + 'SaveDataInFileButton').on('click', (function (e) {
         this.data.exportDataInLink("exportMatch.json");
     }).bind(this));
-}
+};
 
 /**
 * Creates initial loading data screen
@@ -122,7 +122,7 @@ View.prototype.createInitialLoadDataScreen = function () {
     this.loadDataFromWebWindow();
     this.loadDataFromFileWindow();
     this.noLoadDataWindow();
-}
+};
 
 /**
 * Creates window for loading data from web
@@ -142,7 +142,7 @@ View.prototype.loadDataFromWebWindow = function () {
     } else {
         div.append('Aktuálně nejste online<BR> Nelze stáhnout data');
     }
-}
+};
 
 /**
 * Creates window for loading data from file
@@ -184,7 +184,7 @@ View.prototype.loadDataFromFileWindow = function () {
             this.initializeAfterDataLoaded();
         }
     }).bind(this));
-}
+};
 
 /**
 * Creates window for no data loading.
@@ -200,7 +200,7 @@ View.prototype.noLoadDataWindow = function () {
         this.data.loadEmptyNumbers();
         this.initializeAfterDataLoaded();
     }).bind(this));
-}
+};
 
 /**
 * Initialize application after data was loaded.
@@ -212,7 +212,7 @@ View.prototype.initializeAfterDataLoaded = function () {
     this.showPlayersList();
     this._showButton("endOfGame");
     this._showButton("changingStarts");
-}
+};
 
 /**
 * Clears the main work place
@@ -234,7 +234,7 @@ View.prototype.clearWorkPlace = function () {
 
     this.workPlace.off();
     this.siteMenu.off();
-}
+};
 
 /**
 * Show players list
@@ -243,9 +243,6 @@ View.prototype.clearWorkPlace = function () {
 * @author Jan Herzan
 */
 View.prototype.showPlayersList = function () {
-    var view = this;
-    var data = this.data;
-
     this.clearWorkPlace();
 
     this.workPlace.addClass('isDropable');
@@ -272,42 +269,77 @@ View.prototype.showPlayersList = function () {
         actualNumber.data('prefix', this.prefix);
         actualNumber.data('playerNumber', playerList[i].playerNumber);
 
-        actualNumber.on('dragstart', function (e) {
-            e.originalEvent.dataTransfer.effectAllowed = 'copy';
-            e.originalEvent.dataTransfer.setData('Player', e.originalEvent.target.id);
-        });
+        actualNumber.on('dragstart', this.dragStartFunction.bind(this));
 
-        actualNumber.on('contextmenu', (function (e) {
-            var currentElement = $('#' + e.currentTarget.id);
-            e.preventDefault();
+        actualNumber.on('contextmenu', this.contextMenuFunction.bind(this));
 
-            if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'workPlace') {
-                if ($('#' + this.prefix + 'siteMenu').children().size() < 5) {
-                    $('#' + this.prefix + 'siteMenu').append(currentElement);
-                    this.changeButtonClassesAsShadeFromDeck(currentElement);
-                    this.changeButtonClassesToNormalButton(currentElement);
-                }
-            } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
-                $('#' + this.prefix + 'workPlace').append(currentElement);
-                this.changeButtonClassesAsShadeFromBoard(currentElement);
-                this.changeButtonClassesToNormalButton(currentElement);
-            }
-        }).bind(this));
+        actualNumber.on('dragend', this.dragEndFunction.bind(this));
 
-        actualNumber.on('dragend', (function (e) {
-            e.preventDefault();
-            var data = e.originalEvent.dataTransfer.getData("Player");
-            var child = $('#' + data);
-            this.changeButtonClassesToNormalButton(child);
-
-        }).bind(this));
-
-        actualNumber.on('click', function (s) {
-            var playerNumber = $('#' + s.target.id).data('playerNumber');
-            view.showDataForPlayer(playerNumber);
-        });
+        actualNumber.on('click', this.playerClickFunction.bind(this));
     }
-}
+};
+
+/**
+* Drag start function
+*
+* @method dragStartFunction
+* @author Jan Herzan
+* @param {Object} dragStart function param
+*/
+View.prototype.dragStartFunction = function (e) {
+    e.originalEvent.dataTransfer.effectAllowed = 'copy';
+    e.originalEvent.dataTransfer.setData('Player', e.originalEvent.target.id);
+};
+
+/**
+* Player click function
+*
+* @method playerClickFunction
+* @author Jan Herzan
+* @param {Object} Click function param
+*/
+View.prototype.playerClickFunction = function (s) {
+    var playerNumber = $('#' + s.target.id).data('playerNumber');
+    this.showDataForPlayer(playerNumber);
+};
+
+/**
+* Context menu function
+*
+* @method contextMenuFunction
+* @author Jan Herzan
+* @param {Object} Context menu function param
+*/
+View.prototype.contextMenuFunction = function (e) {
+    var currentElement = $('#' + e.currentTarget.id);
+    e.preventDefault();
+
+    if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'workPlace') {
+        if ($('#' + this.prefix + 'siteMenu').children().size() < 5) {
+            $('#' + this.prefix + 'siteMenu').append(currentElement);
+            this.changeButtonClassesAsShadeFromDeck(currentElement);
+            this.changeButtonClassesToNormalButton(currentElement);
+        }
+    } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
+        $('#' + this.prefix + 'workPlace').append(currentElement);
+        this.changeButtonClassesAsShadeFromBoard(currentElement);
+        this.changeButtonClassesToNormalButton(currentElement);
+    }
+};
+
+/**
+* Drag end function
+*
+* @method dragEndFunction
+* @author Jan Herzan
+* @param {Object} DragEnd params
+*/
+View.prototype.dragEndFunction = function (e) {
+    e.preventDefault();
+    var data = e.originalEvent.dataTransfer.getData("Player");
+    var child = $('#' + data);
+    this.changeButtonClassesToNormalButton(child);
+};
 
 /**
 * This method changes styles for button from shadow to normal. This progress is after timeout
@@ -321,7 +353,7 @@ View.prototype.changeButtonClassesToNormalButton = function (button) {
         button.removeClass("siteMenuButtonBlank");
         button.addClass("siteMenuButtonUnselected");
     }, 0);
-}
+};
 
 /**
 * This method changes stelys for button from normal to shadow when it is moved from deck
@@ -335,7 +367,7 @@ View.prototype.changeButtonClassesAsShadeFromDeck = function (button) {
     button.removeClass("siteMenuButtonSelected");
     button.addClass("siteMenuButton");
     button.addClass("siteMenuButtonBlank");
-}
+};
 
 /**
 * This method changes styles for button from normal to shadow when it is moved from board
@@ -349,7 +381,7 @@ View.prototype.changeButtonClassesAsShadeFromBoard = function (button) {
     button.removeClass("siteMenuButtonSelected");
     button.addClass("playerListButton");
     button.addClass("siteMenuButtonBlank");
-}
+};
 
 /**
 * Hides button
@@ -360,7 +392,7 @@ View.prototype.changeButtonClassesAsShadeFromBoard = function (button) {
 */
 View.prototype._hideButton = function (idOfTheButton) {
     $('#' + this.prefix + idOfTheButton).css({ "display": "none" });
-}
+};
 
 /**
 * Shows button
@@ -371,7 +403,7 @@ View.prototype._hideButton = function (idOfTheButton) {
 */
 View.prototype._showButton = function (idOfTheButton) {
     $('#' + this.prefix + idOfTheButton).css({ "display": "block" });
-}
+};
 
 /**
 * Insert div of workplace
@@ -441,7 +473,7 @@ View.prototype.showDataForPlayer = function (playerNumber) {
 
     this.createFunctionalButtons();
 
-}
+};
 
 /**
 * Recounts the position of the shot
@@ -464,7 +496,7 @@ View.prototype.recountPositionOfTheShot = function (positionX, positionY) {
             return { positionX: this.svnBoardHeight - positionY + 30, positionY: positionX };
     }
     return null;
-}
+};
 
 /**
 * Creates the buttons for turning the board
@@ -484,7 +516,7 @@ View.prototype.createFunctionalButtons = function () {
     $('#' + this.prefix + 'arrowRight').on('click', (function (e) {
         this.turnBoardRight();
     }).bind(this));
-}
+};
 
 /**
 * Set classes for name box
@@ -493,14 +525,14 @@ View.prototype.createFunctionalButtons = function () {
 * @author Jan Herzan
 */
 View.prototype.setPlayerNameBoxClass = function () {
-    if (this.turnOfTheBoard % 2 == 0) {
+    if (this.turnOfTheBoard % 2 === 0) {
         $('#' + this.prefix + 'nameOfPlayer').removeClass("name-leftRight");
         $('#' + this.prefix + 'nameOfPlayer').addClass("name-normal");
     } else {
         $('#' + this.prefix + 'nameOfPlayer').addClass("name-leftRight");
         $('#' + this.prefix + 'nameOfPlayer').removeClass("name-normal");
     }
-}
+};
 
 /**
 * Connects two incremental buttons - the value of uppoer bound button cannot be lower than slave button value
@@ -517,7 +549,7 @@ View.prototype.connectIncrementalButtons = function (upperBoundButton, slaveButt
             slaveButton.incrementalButton("option", "value", value);
         }
     });
-}
+};
 
 /**
 * Creates standard incremental button
@@ -537,7 +569,7 @@ View.prototype.createIncrementalButton = function (idOfTheButton, idOfPlayer, wo
             this.actualShowedPlayer[variableName] = value;
         }).bind(this)
     });
-}
+};
 
 /**
 * Creates non incremental button (button shows dialog after click)
@@ -556,7 +588,7 @@ View.prototype.createNonIncrementalButton = function (idOfTheButton, idOfPlayer,
         value: this.actualShowedPlayer[variableName],
         incrementalByTap: false, maxBound: -1, onClickEvent: onClickFunction.bind(this)
     });
-}
+};
 
 /**
 * Creates incremental button with background color changing
@@ -583,7 +615,7 @@ View.prototype.createIncrementalFaulButton = function (idOfTheButton, idOfPlayer
             }
         }).bind(this)
     });
-}
+};
 
 /**
 * Inserts main menu
@@ -662,7 +694,7 @@ View.prototype._dragOverHandlerSiteMenu = function (e) {
         this.changeButtonClassesAsShadeFromDeck(child);
         target.append(child);
     }
-}
+};
 
 /**
 * Drop handler for site menu
@@ -685,7 +717,7 @@ View.prototype._dropHandlerSiteMenu = function (e) {
         this.changeButtonClassesToNormalButton(child);
         target.append(child);
     }
-}
+};
 
 /**
 * Dragover handler for work place
@@ -706,7 +738,7 @@ View.prototype._dragOverHandlerWorkPlace = function (e) {
 
     this.changeButtonClassesAsShadeFromBoard(child);
     target.append(child);
-}
+};
 
 /**
 * Drop handler for work place
@@ -727,4 +759,4 @@ View.prototype._dropHandlerWorkPlace = function (e) {
 
     this.changeButtonClassesToNormalButton(child);
     target.append(child);
-}
+};

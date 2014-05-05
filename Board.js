@@ -54,7 +54,6 @@ View.prototype.setClassForOrientation = function () {
             $('#' + this.prefix + 'playground' + this.actualShowedPlayer.playerNumber).addClass("playgroundSVG-rightOriented");
             break;
     }
-    console.log($('#' + this.prefix + 'playground' + this.actualShowedPlayer.playerNumber).attr("class"));
 };
 
 /**
@@ -107,7 +106,7 @@ View.prototype.insertPlayground = function (space) {
 
     }
     svgPicture = svgPicture + '</g>' +
-        '</svg>'
+        '</svg>';
 
     space.append(svgPicture);
 

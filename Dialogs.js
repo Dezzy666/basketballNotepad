@@ -28,7 +28,7 @@ View.prototype.insertDialog = function () {
         closeOnEscape: true,
         modal: true
     });
-}
+};
 
 /**
 * Clears dialog content
@@ -38,7 +38,7 @@ View.prototype.insertDialog = function () {
 */
 View.prototype.clearDialogElement = function () {
     this.dialogElement.empty();
-}
+};
 
 /**
 * Creates dialog for near shot successibility
@@ -52,7 +52,7 @@ View.prototype.createUnderDeskShotDialog = function () {
     this.dialogElement.dialog("option", "title", "Úspěšnost");
     this.dialogElement.dialog("option", "width", 170);
     this.dialogElement.dialog("open");
-}
+};
 
 /**
 * Creates penalty shot dialog
@@ -113,7 +113,7 @@ View.prototype.createPenaltyShotDialog = function () {
     this.dialogElement.dialog("option", "width", 550);
     this.dialogElement.dialog("option", "title", "Kolik je trestných střel?");
     this.dialogElement.dialog("open");
-}
+};
 
 /**
 * Creates yesNoTupples
@@ -130,11 +130,11 @@ View.prototype.createYesNoTupple = function (howMany, callBackFunction) {
     for (i = 0; i < howMany; i++) {
         this.dialogElement.append('<div id="' + this.prefix + 'Tupple' + i + '"></div>');
         tupple = $('#' + this.prefix + 'Tupple' + i);
-        tupple.yesNoTupple({ title: 'Pokus ' + (i + 1), prefix: 'YNT00' + i});
+        tupple.yesNoTupple({ title: 'Pokus ' + (i + 1), prefix: 'YNT00' + i });
         tupple.yesNoTupple("option", "stateChanged", callBackFunction);
         this.yesNoTupples.push(tupple);
     }
-}
+};
 
 /**
 * This function is callback function for yesNoTupple for shots near basket
@@ -159,7 +159,7 @@ View.prototype.stateChangedShot = function (value) {
 
     this.dialogElement.dialog("close");
     this.showDataForPlayer(this.actualShowedPlayer.playerNumber);
-}
+};
 
 /**
 * Creates shot success dialog
@@ -183,7 +183,7 @@ View.prototype.createShotSuccDialog = function (positionX, positionY) {
     this.dialogElement.dialog("option", "title", "Úspěšnost");
     this.dialogElement.dialog("option", "width", 170);
     this.dialogElement.dialog("open");
-}
+};
 
 /**
 * This function is callback function for penalty shots.
@@ -209,4 +209,4 @@ View.prototype.stateChangedPenalty = function (value) {
     this.dialogElement.dialog("close");
     this.showDataForPlayer(this.actualShowedPlayer.playerNumber);
 
-}
+};
