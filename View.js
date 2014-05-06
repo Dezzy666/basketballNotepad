@@ -264,7 +264,10 @@ View.prototype.showPlayersList = function () {
             continue;
         }
 
-        this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerListButton siteMenuButtonUnselected" draggable="true">' + playerList[i].playerNumber + '</div>');
+        this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerListButton siteMenuButtonUnselected" draggable="true">' +
+            '<div class="playerNick">' + playerList[i].nick + '</div>' +
+            playerList[i].playerNumber +
+            '</div>');
         var actualNumber = $('#' + this.prefix + 'player' + playerList[i].playerNumber);
         actualNumber.data('prefix', this.prefix);
         actualNumber.data('playerNumber', playerList[i].playerNumber);

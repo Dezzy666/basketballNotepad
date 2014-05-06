@@ -47,7 +47,7 @@ Data.prototype.loadDataFromJSON = function (data) {
     if (transformedData.players !== undefined) {
         for (i = 0; i < transformedData.players.length; i++) {
             if (transformedData.players[i].playerNumber !== undefined && transformedData.players[i].playerName !== undefined) {
-                this.players.push(this.createPlayer(transformedData.players[i].playerNumber, transformedData.players[i].playerName));
+                this.players.push(this.createPlayer(transformedData.players[i].playerNumber, transformedData.players[i].playerName, transformedData.players[i].nick));
             } else {
                 return false;
             }
@@ -67,8 +67,11 @@ Data.prototype.loadDataFromJSON = function (data) {
 * @param Players number
 * @param Players name
 */
-Data.prototype.createPlayer = function (playerNumber, playerName) {
-    return { playerNumber: playerNumber, name: playerName, faulPlus: 0, faulMinus: 0, gain: 0, loss: 0, reboundO: 0, reboundD: 0, penaltsGetted: 0, penaltsScored: 0, shots: [], shotsUnderBasket: 0, shotsUnderBasketScored: 0 };
+Data.prototype.createPlayer = function (playerNumber, playerName, nick) {
+    if (nick === undefined) {
+        nick = playerName.substring(0, 8);
+    }
+    return { playerNumber: playerNumber, name: playerName, nick: nick, faulPlus: 0, faulMinus: 0, gain: 0, loss: 0, reboundO: 0, reboundD: 0, penaltsGetted: 0, penaltsScored: 0, shots: [], shotsUnderBasket: 0, shotsUnderBasketScored: 0 };
 };
 
 /**

@@ -87,10 +87,8 @@ body {
 .playerButton {
     height: 84px;
     width: 84px;
-    line-height: 90px;
-    font-size: 60px;
+    font-size: 55px;
     text-align: center;
-    vertical-align: middle;
     border-radius: 15px;
     cursor: pointer;
     -webkit-touch-callout: none;
@@ -99,6 +97,11 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.playerNick {
+    font-size:15px;
+
 }
 
 .siteMenuButton {
