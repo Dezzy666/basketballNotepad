@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#30-04-2014 14:51
+#06-05-2014 12:21
 
 CACHE:
 #obrazky
@@ -8,7 +8,7 @@ libs/images/ui-icons_888888_256x240.png
 
 #Fonty
 fonts/Arrows.otf
-fonts/Arrows.tff
+fonts/Arrows.ttf
     
 #knihovny
 libs/jquery-1.11.0.min.js
@@ -23,6 +23,7 @@ yesNoTupple.js
 Data.js
 View.js
 Dialogs.js
+Board.js
 
 #CSS styly
 basketballNotepad.css
