@@ -181,6 +181,7 @@ View.prototype.createShotSuccDialog = function (positionX, positionY) {
         this.dialogElement.dialog("close");
     }).bind(this));
     this.dialogElement.dialog("option", "title", "Úspěšnost");
+    this.dialogElement.dialog({ position: [this.parentElement.offset().left + 320, 200] });
     this.dialogElement.dialog("option", "width", 170);
     this.dialogElement.dialog("open");
 };
