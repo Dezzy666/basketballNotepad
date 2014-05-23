@@ -352,10 +352,16 @@ View.prototype.dragEndFunction = function (e) {
 * @param {Object} Button
 */
 View.prototype.changeButtonClassesToNormalButton = function (button) {
-    setTimeout(function () {
-        button.removeClass("siteMenuButtonBlank");
-        button.addClass("siteMenuButtonUnselected");
-    }, 0);
+    setTimeout((function () {
+        var i, but;
+        var numberOfPlayers = this.data.getHighestPlayerNumber();
+
+        for (i = 0; i <= numberOfPlayers; i++) {
+            but = $('#' + this.prefix + 'player' + i);
+            but.removeClass("siteMenuButtonBlank");
+            but.addClass("siteMenuButtonUnselected");
+        }
+    }).bind(this), 0);
 };
 
 /**
@@ -367,7 +373,6 @@ View.prototype.changeButtonClassesToNormalButton = function (button) {
 */
 View.prototype.changeButtonClassesAsShadeFromDeck = function (button) {
     button.removeClass("playerListButton");
-    button.removeClass("siteMenuButtonSelected");
     button.addClass("siteMenuButton");
     button.addClass("siteMenuButtonBlank");
 };
@@ -381,7 +386,6 @@ View.prototype.changeButtonClassesAsShadeFromDeck = function (button) {
 */
 View.prototype.changeButtonClassesAsShadeFromBoard = function (button) {
     button.removeClass("siteMenuButton");
-    button.removeClass("siteMenuButtonSelected");
     button.addClass("playerListButton");
     button.addClass("siteMenuButtonBlank");
 };

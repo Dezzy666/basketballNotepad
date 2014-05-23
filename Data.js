@@ -12,6 +12,7 @@
 */
 function Data() {
     this.players = [];
+    this.highestPlayerNumber = 0;
 }
 
 /**
@@ -71,6 +72,11 @@ Data.prototype.createPlayer = function (playerNumber, playerName, nick) {
     if (nick === undefined) {
         nick = playerName.substring(0, 8);
     }
+
+    if (this.highestPlayerNumber < playerNumber) {
+        this.highestPlayerNumber = playerNumber;
+    }
+
     return { playerNumber: playerNumber, name: playerName, nick: nick, faulPlus: 0, faulMinus: 0, gain: 0, loss: 0, reboundO: 0, reboundD: 0, penaltsGetted: 0, penaltsScored: 0, shots: [], shotsUnderBasket: 0, shotsUnderBasketScored: 0 };
 };
 
@@ -101,6 +107,17 @@ Data.prototype.getDataOfPlayer = function (playerNumber) {
 
     return undefined;
 };
+
+/**
+* Returns the highest player number
+*
+* @method getHighestPlayerNumber
+* @author Jan Herzan
+* @return {Integer} number of players
+*/
+Data.prototype.getHighestPlayerNumber = function () {
+    return this.highestPlayerNumber;
+}
 
 /**
 * Exports data into JSON file
