@@ -181,7 +181,11 @@ View.prototype.createShotSuccDialog = function (positionX, positionY) {
         this.dialogElement.dialog("close");
     }).bind(this));
     this.dialogElement.dialog("option", "title", "Úspěšnost");
-    this.dialogElement.dialog({ position: [this.parentElement.offset().left + 320, 200] });
+    if ($(".siteMenu").width() < 200) {
+        this.dialogElement.dialog({ position: [this.parentElement.offset().left + $(".siteMenu").width() + $(".basicIncrementalButtons").width() - 200, 200] });
+    } else {
+        this.dialogElement.dialog({ position: [this.parentElement.offset().left + ($(".siteMenu").width()/2), 200] });
+    }
     this.dialogElement.dialog("option", "width", 170);
     this.dialogElement.dialog("open");
 };
