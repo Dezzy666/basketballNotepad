@@ -252,10 +252,10 @@ View.prototype.showPlayersList = function () {
     this.siteMenu.addClass('isDropable');
     this.siteMenu.attr("draggable", "true");
 
-    //this.workPlace.on('drop', this._dropHandlerWorkPlace);
-    this.workPlace.on('dragover', this._dragOverHandlerWorkPlace.bind(this));
-    //this.siteMenu.on('drop', this._dropHandlerSiteMenu);
-    this.siteMenu.on('dragover', this._dragOverHandlerSiteMenu.bind(this));
+    document.querySelector("#" + this.workPlace.attr("id")).addEventListener('drop', this._dropHandlerWorkPlace.bind(this));
+    document.querySelector("#" + this.workPlace.attr("id")).addEventListener('dragover', this._dragOverHandlerWorkPlace.bind(this));
+    document.querySelector("#" + this.siteMenu.attr("id")).addEventListener('drop', this._dropHandlerSiteMenu.bind(this));
+    document.querySelector("#" + this.siteMenu.attr("id")).addEventListener('dragover', this._dragOverHandlerSiteMenu.bind(this));
 
 
     var playerList = this.data.getData();
@@ -272,11 +272,11 @@ View.prototype.showPlayersList = function () {
         actualNumber.data('prefix', this.prefix);
         actualNumber.data('playerNumber', playerList[i].playerNumber);
 
-        actualNumber.on('dragstart', this.dragStartFunction.bind(this));
+        document.querySelector("#" + actualNumber.attr("id")).addEventListener('dragstart', this.dragStartFunction.bind(this), false);
 
         actualNumber.on('contextmenu', this.contextMenuFunction.bind(this));
 
-        actualNumber.on('dragend', this.dragEndFunction.bind(this));
+        document.querySelector("#" + actualNumber.attr("id")).addEventListener('dragend', this.dragEndFunction.bind(this), false);
 
         actualNumber.on('click', this.playerClickFunction.bind(this));
     }
@@ -290,8 +290,7 @@ View.prototype.showPlayersList = function () {
 * @param {Object} dragStart function param
 */
 View.prototype.dragStartFunction = function (e) {
-    e.originalEvent.dataTransfer.effectAllowed = 'copy';
-    e.originalEvent.dataTransfer.setData('Player', e.originalEvent.target.id);
+    e.dataTransfer.setData('text', e.target.id);
 };
 
 /**
@@ -339,7 +338,7 @@ View.prototype.contextMenuFunction = function (e) {
 */
 View.prototype.dragEndFunction = function (e) {
     e.preventDefault();
-    var data = e.originalEvent.dataTransfer.getData("Player");
+    var data = e.dataTransfer.getData("text");
     var child = $('#' + data);
     this.changeButtonClassesToNormalButton(child);
 };
@@ -689,7 +688,7 @@ View.prototype._insertButtonIntoSiteMenu = function (content, id, functionality)
 */
 View.prototype._dragOverHandlerSiteMenu = function (e) {
     e.preventDefault();
-    var data = e.originalEvent.dataTransfer.getData("Player");
+    var data = e.dataTransfer.getData("text");
     var child = $('#' + data);
     var target = $('#' + e.target.id);
 
@@ -712,7 +711,7 @@ View.prototype._dragOverHandlerSiteMenu = function (e) {
 */
 View.prototype._dropHandlerSiteMenu = function (e) {
     e.preventDefault();
-    var data = e.originalEvent.dataTransfer.getData("Player");
+    var data = e.dataTransfer.getData("text");
     var child = $('#' + data);
     var target = $('#' + e.target.id);
 
@@ -721,6 +720,7 @@ View.prototype._dropHandlerSiteMenu = function (e) {
     }
 
     if (target.children().size() < 5) {
+        this.changeButtonClassesAsShadeFromDeck(child);
         this.changeButtonClassesToNormalButton(child);
         target.append(child);
     }
@@ -735,7 +735,7 @@ View.prototype._dropHandlerSiteMenu = function (e) {
 */
 View.prototype._dragOverHandlerWorkPlace = function (e) {
     e.preventDefault();
-    var data = e.originalEvent.dataTransfer.getData("Player");
+    var data = e.dataTransfer.getData("text");
     var child = $('#' + data);
     var target = $('#' + e.target.id);
 
@@ -756,7 +756,7 @@ View.prototype._dragOverHandlerWorkPlace = function (e) {
 */
 View.prototype._dropHandlerWorkPlace = function (e) {
     e.preventDefault();
-    var data = e.originalEvent.dataTransfer.getData("Player");
+    var data = e.dataTransfer.getData("text");
     var child = $('#' + data);
     var target = $('#' + e.target.id);
 
@@ -764,6 +764,7 @@ View.prototype._dropHandlerWorkPlace = function (e) {
         return;
     }
 
+    this.changeButtonClassesAsShadeFromBoard(child);
     this.changeButtonClassesToNormalButton(child);
     target.append(child);
 };
