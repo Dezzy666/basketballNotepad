@@ -82,13 +82,13 @@ View.prototype.createEndingScreen = function () {
 * @author Jan Herzan
 */
 View.prototype.createEndSendDataOnWebWindow = function () {
-    this.workPlace.append('<div class="loadScreenLoadData loadScreanFromWeb" id="' + this.prefix + 'loadDataFromWeb' + '"></div>');
+    this.workPlace.append('<div class="loadScreenLoadData loadScreenLoadDataDimension loadScreanFromWeb" id="' + this.prefix + 'loadDataFromWeb' + '"></div>');
     var div = $('#' + this.prefix + 'loadDataFromWeb');
 
     if (navigator.onLine) {
         div.append('<br>Přihlásit se ke svému účtu na webu.' +
             '<form><input type="text"placeholder="Login"><input type="password" placeholder="Heslo"></form>' +
-            '<div class="loadScreenButton">Přihlásit</div>');
+            '<div class="loadScreenButton loadScreenButtonDimension">Přihlásit</div>');
     } else {
         div.append('Aktuálně nejste online<BR> Nelze nahrát data.');
     }
@@ -101,9 +101,9 @@ View.prototype.createEndSendDataOnWebWindow = function () {
 * @author Jan Herzan
 */
 View.prototype.createEndSaveDataInFielWindow = function () {
-    this.workPlace.append('<div class="loadScreenLoadData saveDataInFile" id="' + this.prefix + 'loadDataFromWeb' + '">' +
+    this.workPlace.append('<div class="loadScreenLoadData loadScreenLoadDataDimension saveDataInFile" id="' + this.prefix + 'loadDataFromWeb' + '">' +
         'Stáhnout výsledek utkání v souboru.' +
-        '<div class="loadScreenButton" id="' + this.prefix + 'SaveDataInFileButton">Stáhnout soubor</div>' +
+        '<div class="loadScreenButton loadScreenButtonDimension" id="' + this.prefix + 'SaveDataInFileButton">Stáhnout soubor</div>' +
         '</div>');
 
     $('#' + this.prefix + 'SaveDataInFileButton').on('click', (function (e) {
@@ -131,14 +131,14 @@ View.prototype.createInitialLoadDataScreen = function () {
 * @author Jan Herzan
 */
 View.prototype.loadDataFromWebWindow = function () {
-    this.workPlace.append('<div class="loadScreenLoadData loadScreanFromWeb" id="' + this.prefix + 'loadDataFromWeb' + '"></div>');
+    this.workPlace.append('<div class="loadScreenLoadData loadScreenLoadDataDimension loadScreanFromWeb" id="' + this.prefix + 'loadDataFromWeb' + '"></div>');
     var div = $('#' + this.prefix + 'loadDataFromWeb');
 
 
     if (navigator.onLine) {
         div.append('<br>Přihlásit se ke svému účtu na webu.' +
             '<form><input type="text"placeholder="Login"><input type="password" placeholder="Heslo"></form>' +
-            '<div class="loadScreenButton">Přihlásit</div>');
+            '<div class="loadScreenButton loadScreenButtonDimension">Přihlásit</div>');
     } else {
         div.append('Aktuálně nejste online<BR> Nelze stáhnout data');
     }
@@ -151,9 +151,9 @@ View.prototype.loadDataFromWebWindow = function () {
 * @author Jan Herzan
 */
 View.prototype.loadDataFromFileWindow = function () {
-    this.workPlace.append('<div class="loadScreenLoadData loadScreanFromFile" id="' + this.prefix + 'loadDataFromFile' + '"><br>Nahrát data hráčů ze souboru na lokálním disku.<BR>' +
+    this.workPlace.append('<div class="loadScreenLoadData loadScreenLoadDataDimension loadScreanFromFile" id="' + this.prefix + 'loadDataFromFile' + '"><br>Nahrát data hráčů ze souboru na lokálním disku.<BR>' +
         '<form id="' + this.prefix + 'loadFromFile"><input type="file" id="' + this.prefix + 'loadFromFilePath"></form>' +
-        '<div class="loadScreenButton" id="' + this.prefix + 'LoadDataFromFileButton">Nahrát soubor</div></div>');
+        '<div class="loadScreenButton loadScreenButtonDimension" id="' + this.prefix + 'LoadDataFromFileButton">Nahrát soubor</div></div>');
 
     $('#' + this.prefix + 'loadFromFilePath').on('change', (function (e) {
         var reader = new FileReader();
@@ -193,8 +193,8 @@ View.prototype.loadDataFromFileWindow = function () {
 * @author Jan Herzan
 */
 View.prototype.noLoadDataWindow = function () {
-    this.workPlace.append('<div class="loadScreenLoadData loadScreanNoData" id="' + this.prefix + 'noLoadData' + '">Nemám data týmu.<br> Přeji si zaznamenávat hru pouze s čísly hráčů a jména přiřadím až zpětně.' +
-        '<div class="loadScreenButton" id="' + this.prefix + 'noDataLoad">Hrát pouze s čísly</div></div>');
+    this.workPlace.append('<div class="loadScreenLoadData loadScreenLoadDataDimension loadScreanNoData" id="' + this.prefix + 'noLoadData' + '">Nemám data týmu.<br> Přeji si zaznamenávat hru pouze s čísly hráčů a jména přiřadím až zpětně.' +
+        '<div class="loadScreenButton loadScreenButtonDimension" id="' + this.prefix + 'noDataLoad">Hrát pouze s čísly</div></div>');
 
     $('#' + this.prefix + 'noDataLoad').on('click', (function (e) {
         this.data.loadEmptyNumbers();
@@ -264,7 +264,7 @@ View.prototype.showPlayersList = function () {
             continue;
         }
 
-        this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerListButton siteMenuButtonUnselected" draggable="true">' +
+        this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerButtonDimension playerListButton siteMenuButtonUnselected" draggable="true">' +
             '<div class="playerNick">' + playerList[i].nick + '</div>' +
             playerList[i].playerNumber +
             '</div>');
@@ -418,7 +418,7 @@ View.prototype._showButton = function (idOfTheButton) {
 * @author Jan Herzán
 */
 View.prototype._insertWorkPlace = function () {
-    this.parentElement.append('<div id="' + this.prefix + 'workPlace" class="workPlace"></div>');
+    this.parentElement.append('<div id="' + this.prefix + 'workPlace" class="workPlace workPlaceDimension"></div>');
     this.workPlace = $('#' + this.prefix + 'workPlace');
 };
 
@@ -511,13 +511,13 @@ View.prototype.recountPositionOfTheShot = function (positionX, positionY) {
 * @author Jan Herzan
 */
 View.prototype.createFunctionalButtons = function () {
-    this.workPlace.append('<div class="arrowButton" id="' + this.prefix + 'arrowLeft">y</div>');
+    this.workPlace.append('<div class="arrowButton arrowButtonDimension arrowButtonDimensionLeft" id="' + this.prefix + 'arrowLeft">y</div>');
 
     $('#' + this.prefix + 'arrowLeft').on('click', (function (e) {
         this.turnBoardLeft();
     }).bind(this));
 
-    this.workPlace.append('<div class="arrowButton" id="' + this.prefix + 'arrowRight">z</div>');
+    this.workPlace.append('<div class="arrowButton arrowButtonDimension arrowButtonDimensionRight" id="' + this.prefix + 'arrowRight">z</div>');
 
     $('#' + this.prefix + 'arrowRight').on('click', (function (e) {
         this.turnBoardRight();
@@ -630,7 +630,7 @@ View.prototype.createIncrementalFaulButton = function (idOfTheButton, idOfPlayer
 * @author Jan Herzan
 */
 View.prototype._insertMainMenu = function () {
-    this.parentElement.append('<div id="' + this.prefix + 'mainMenu" class="mainMenu"></div>');
+    this.parentElement.append('<div id="' + this.prefix + 'mainMenu" class="mainMenu mainMenuDimension"></div>');
     this.mainMenu = $('#' + this.prefix + 'mainMenu');
 };
 
@@ -641,7 +641,7 @@ View.prototype._insertMainMenu = function () {
 * @author Jan Herzan
 */
 View.prototype._insertSiteMenu = function () {
-    this.parentElement.append('<div id="' + this.prefix + 'siteMenu" class="siteMenu"></div>');
+    this.parentElement.append('<div id="' + this.prefix + 'siteMenu" class="siteMenu siteMenuDimension"></div>');
     this.siteMenu = $('#' + this.prefix + 'siteMenu');
 };
 
@@ -660,7 +660,7 @@ View.prototype._insertButtonIntoMainMenu = function (content, id, functionality,
         extraType = "";
     }
 
-    $('#' + this.prefix + 'mainMenu').append('<div class="mainMenuButton ' + extraType + '" id="' + this.prefix + id + '">' + content + '</div>');
+    $('#' + this.prefix + 'mainMenu').append('<div class="mainMenuButton mainMenuButtonDimension ' + extraType + '" id="' + this.prefix + id + '">' + content + '</div>');
     $('#' + this.prefix + id).on('click', functionality.bind(this));
 };
 
@@ -675,7 +675,7 @@ View.prototype._insertButtonIntoMainMenu = function (content, id, functionality,
 * @param {String} extra parameters CSS
 */
 View.prototype._insertButtonIntoSiteMenu = function (content, id, functionality) {
-    $('#' + this.prefix + 'siteMenu').append('<div class="playerButton siteMenuButton" id="' + this.prefix + id + '">' + content + '</div>');
+    $('#' + this.prefix + 'siteMenu').append('<div class="playerButton playerButtonDimension siteMenuButton" id="' + this.prefix + id + '">' + content + '</div>');
     $('#' + this.prefix + id).on('click', functionality.bind(this));
 };
 

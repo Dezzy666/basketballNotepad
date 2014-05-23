@@ -12,6 +12,7 @@ $.widget("perfectLongBowLib.basketballNotepad", {
 
     _create: function () {
         this.element.addClass("mainWindow");
+        this.element.addClass("mainWindowDimension");
         this.options.view = new View(this.element, this.options.prefix);
     }
 
