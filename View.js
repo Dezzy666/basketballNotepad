@@ -301,7 +301,7 @@ View.prototype.dragStartFunction = function (e) {
 * @param {Object} Click function param
 */
 View.prototype.playerClickFunction = function (s) {
-    var playerNumber = $('#' + s.target.id).data('playerNumber');
+    var playerNumber = $('#' + s.currentTarget.id).data('playerNumber');
     this.showDataForPlayer(playerNumber);
 };
 
