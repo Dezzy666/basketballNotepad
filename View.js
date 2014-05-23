@@ -323,9 +323,11 @@ View.prototype.contextMenuFunction = function (e) {
             this.changeButtonClassesToNormalButton(currentElement);
         }
     } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
-        $('#' + this.prefix + 'workPlace').append(currentElement);
-        this.changeButtonClassesAsShadeFromBoard(currentElement);
-        this.changeButtonClassesToNormalButton(currentElement);
+        if (this.workPlace.hasClass('isDropable')) {
+            $('#' + this.prefix + 'workPlace').append(currentElement);
+            this.changeButtonClassesAsShadeFromBoard(currentElement);
+            this.changeButtonClassesToNormalButton(currentElement);
+        }
     }
 };
 
