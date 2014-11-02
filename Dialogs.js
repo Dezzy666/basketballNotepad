@@ -151,14 +151,20 @@ View.prototype.stateChangedShot = function (value) {
     }
 
     for (i = 0; i < this.yesNoTupples.length; i++) {
-        this.actualShowedPlayer.shotsUnderBasket = this.actualShowedPlayer.shotsUnderBasket + 1;
+        this.viewEvents.fireEvent("addDataNodeForPlayer", {
+            playerNumber: this.actualShowedPlayer.playerNumber,
+            valueChanged: "shotsUnderBasket"
+        });
         if (this.yesNoTupples[i].yesNoTupple("option", "value") === 1) {
-            this.actualShowedPlayer.shotsUnderBasketScored = this.actualShowedPlayer.shotsUnderBasketScored + 1;
+            this.viewEvents.fireEvent("addDataNodeForPlayer", {
+                playerNumber: this.actualShowedPlayer.playerNumber,
+                valueChanged: "shotsUnderBasketScored"
+            });
         }
     }
 
     this.dialogElement.dialog("close");
-    this.showDataForPlayer(this.actualShowedPlayer.playerNumber);
+    this.viewEvents.fireEvent("numberClicked", { playerNumber: this.actualShowedPlayer.playerNumber });
 };
 
 /**
@@ -176,8 +182,7 @@ View.prototype.createShotSuccDialog = function (positionX, positionY) {
         if (this.yesNoTupples[0].yesNoTupple("option", "value") === -1) {
             return;
         }
-        this.actualShowedPlayer.shots.push({ x: recountedPosition.positionX, y: recountedPosition.positionY, scored: this.yesNoTupples[0].yesNoTupple("option", "value") === 1 });
-        this.showDataForPlayer(this.actualShowedPlayer.playerNumber);
+        this.viewEvents.fireEvent("addShot", { playerNumber: this.actualShowedPlayer.playerNumber, x: recountedPosition.positionX, y: recountedPosition.positionY, scored: this.yesNoTupples[0].yesNoTupple("option", "value") === 1 });
         this.dialogElement.dialog("close");
     }).bind(this));
     this.dialogElement.dialog("option", "title", "Úspěšnost");
@@ -205,13 +210,14 @@ View.prototype.stateChangedPenalty = function (value) {
     }
 
     for (i = 0; i < this.yesNoTupples.length; i++) {
-        this.actualShowedPlayer.penaltsGetted = this.actualShowedPlayer.penaltsGetted + 1;
         if (this.yesNoTupples[i].yesNoTupple("option", "value") === 1) {
-            this.actualShowedPlayer.penaltsScored = this.actualShowedPlayer.penaltsScored + 1;
+            this.viewEvents.fireEvent("addDataNodeForPlayer", { playerNumber: this.actualShowedPlayer.playerNumber, penaltyNumber: i, penaltyScored: true });
+        } else {
+            this.viewEvents.fireEvent("addDataNodeForPlayer", { playerNumber: this.actualShowedPlayer.playerNumber, penaltyNumber: i, penaltyScored: false });
         }
     }
 
     this.dialogElement.dialog("close");
-    this.showDataForPlayer(this.actualShowedPlayer.playerNumber);
+    this.viewEvents.fireEvent("numberClicked", { playerNumber: this.actualShowedPlayer.playerNumber });
 
 };

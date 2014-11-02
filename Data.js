@@ -61,6 +61,26 @@ Data.prototype.loadDataFromJSON = function (data) {
 };
 
 /**
+* Loads data from JSON and save it without changing.
+*
+*@method loadCompleteDataFromJSON
+*@authro Jan Herzan
+*@param {String} data
+*@return If data was loaded successfully
+*/
+Data.prototype.loadCompleteDataFromJSON = function (data) {
+    var transformedData;
+    try {
+        transformedData = jQuery.parseJSON(data);
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    this.players = transformedData.players;
+}
+
+/**
 * Creates data for one player
 *
 * @method createPlayer
@@ -91,6 +111,16 @@ Data.prototype.getData = function () {
 };
 
 /**
+* Returns data of players
+*
+* @method getData
+* @author Jan Herzan
+*/
+Data.prototype.getPlayersList = function () {
+    return this.players;
+}
+
+/**
 * Returns data of one player
 *
 * @method getDataOfPlayer
@@ -107,6 +137,14 @@ Data.prototype.getDataOfPlayer = function (playerNumber) {
 
     return undefined;
 };
+
+Data.prototype.playerDataChanged = function (playerNumber, dataNode) {
+    console.log("PN " + playerNumber);
+    for (var key in dataNode) {
+        console.log("NODE KEY: " + key);
+        console.log("NODE VALUE: " + dataNode[key]);
+    }
+}
 
 /**
 * Returns the highest player number

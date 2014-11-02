@@ -15,6 +15,10 @@ $.widget("basketballNotepad.incrementalButton", {
         incrementalByTap: true,
         // when value changes - callback
         valueChanged: function (value, element) { },
+        // when value is increased - callback
+        valueIncreased: function (value, element) { },
+        // when value is decreased - callback
+        valueDecreased: function (value, element) {},
         // on click event
         onClickEvent: function (e) { e.preventDefault(); }
     },
@@ -30,6 +34,7 @@ $.widget("basketballNotepad.incrementalButton", {
                     this.options.value = this.options.value + 1;
                     this.element.html(this.options.value);
                     this.options.valueChanged(this.options.value, this.element);
+                    this.options.valueIncreased(this.options.value, this.element);
                 }
             }).bind(this));
 
@@ -39,6 +44,7 @@ $.widget("basketballNotepad.incrementalButton", {
                     this.options.value = this.options.value - 1;
                     this.element.html(this.options.value);
                     this.options.valueChanged(this.options.value, this.element);
+                    this.options.valueDecreased(this.options.value, this.element);
                 }
             }).bind(this));
 
@@ -48,6 +54,7 @@ $.widget("basketballNotepad.incrementalButton", {
                     this.options.value = this.options.value - 1;
                     this.element.html(this.options.value);
                     this.options.valueChanged(this.options.value, this.element);
+                    this.options.valueDecreased(this.options.value, this.element);
                 }
             }).bind(this));
         } else {
@@ -59,7 +66,6 @@ $.widget("basketballNotepad.incrementalButton", {
     setValue: function (value) {
         this.options.value = value;
         this.element.html(this.options.value);
-        this.options.valueChanged(this.options.value, this.element);
     }
 
 });

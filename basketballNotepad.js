@@ -7,13 +7,48 @@
 $.widget("perfectLongBowLib.basketballNotepad", {
     options: {
         prefix: "BNP001",
-        view: undefined
     },
 
     _create: function () {
         this.element.addClass("mainWindow");
         this.element.addClass("mainWindowDimension");
-        this.options.view = new View(this.element, this.options.prefix);
+        this.view = new View(this.element, this.options.prefix);
+
+        this.data = new Data();
+
+        this.view.viewEvents.addEventListener("changingButtonPressed", (function () {
+            this.view.showPlayersList(this.data.getPlayersList());
+        }).bind(this));
+
+        this.view.viewEvents.addEventListener("exportDataDemand", (function () {
+            this.data.exportDataInLink("exportMatch.json");
+        }).bind(this));
+
+        this.view.viewEvents.addEventListener("loadEmptyNumbers", (function () {
+            this.data.loadEmptyNumbers();
+            this.view.initializeAfterDataLoaded(this.data.getPlayersList());
+        }).bind(this));
+
+        this.view.viewEvents.addEventListener("loadMainProgram", (function () {
+            this.initializeAfterDataLoaded(this.data.getPlayersList());
+        }).bind());
+
+        this.view.viewEvents.addEventListener("numberClicked", (function (params) {
+            this.view.showDataForPlayer(this.data.getDataOfPlayer(params.playerNumber));
+        }).bind(this));
+
+        this.view.viewEvents.addEventListener("endgameButtonPressed", (function () {
+            this.view.clearWorkPlace();
+            this.view.createEndingScreen();
+        }).bind(this));
+
+        this.view.viewEvents.addEventListener("addDataNodeForPlayer", (function (params) {
+            if (params.playerNumber === undefined) {
+                console.log("UNKNOWN PLAYER");
+                return;
+            }
+            this.data.playerDataChanged(params.playerNumber, params);
+        }).bind(this));
     }
 
 });

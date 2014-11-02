@@ -21,10 +21,10 @@ function View(element, prefix) {
     this.svnBoardWidth = 500;
     this.svnBoardHeight = 470;
 
-    this.data = new Data();
-
     this._insertMainMenu();
     this._insertSiteMenu();
+
+    this.viewEvents = new EventSlots();
 
     this.turnOfTheBoard = 0;
 
@@ -32,27 +32,14 @@ function View(element, prefix) {
         return 'Opravdu chcete opustit stránku? Veškerá data budou ztracena.';
     });
 
-    this._insertButtonIntoMainMenu("Střídání ukončeno", "changingEnds",
-        function (params) {
-
-        },
-        "mainMenuButtonChanging");
-
-    this._hideButton("changingEnds");
-
     this._insertButtonIntoMainMenu("Střídání", "changingStarts",
-        function (params) {
-            this.showPlayersList();
-        },
+        "changingButtonPressed",
         "mainMenuButtonChanging");
 
     this._hideButton("changingStarts");
 
     this._insertButtonIntoMainMenu("Konec utkání", "endOfGame",
-        function (params) {
-            this.clearWorkPlace();
-            this.createEndingScreen();
-        },
+        "endgameButtonPressed",
         "mainMenuButtonNormal");
 
     this._hideButton("endOfGame");
@@ -107,7 +94,7 @@ View.prototype.createEndSaveDataInFielWindow = function () {
         '</div>');
 
     $('#' + this.prefix + 'SaveDataInFileButton').on('click', (function (e) {
-        this.data.exportDataInLink("exportMatch.json");
+        this.viewEvents.fireEvent("exportDataDemand", {});
     }).bind(this));
 };
 
@@ -177,11 +164,11 @@ View.prototype.loadDataFromFileWindow = function () {
 
     $('#' + this.prefix + 'LoadDataFromFileButton').on('click', (function (e) {
         if (this.tempData !== undefined) {
-            if (!this.data.loadDataFromJSON(this.tempData)) {
+            if (this.viewEvents.fireEvent("loadDataFromJSON",this.tempData)) {
                 alert("Data se nepodařilo načíst");
                 return;
             }
-            this.initializeAfterDataLoaded();
+            this.viewEvents.addEventListener("loadMainProgram", {});
         }
     }).bind(this));
 };
@@ -197,8 +184,7 @@ View.prototype.noLoadDataWindow = function () {
         '<div class="loadScreenButton loadScreenButtonDimension" id="' + this.prefix + 'noDataLoad">Hrát pouze s čísly</div></div>');
 
     $('#' + this.prefix + 'noDataLoad').on('click', (function (e) {
-        this.data.loadEmptyNumbers();
-        this.initializeAfterDataLoaded();
+        this.viewEvents.fireEvent("loadEmptyNumbers", {});
     }).bind(this));
 };
 
@@ -208,8 +194,8 @@ View.prototype.noLoadDataWindow = function () {
 * @method initializeAfterDataLoaded
 * @author Jan Herzan
 */
-View.prototype.initializeAfterDataLoaded = function () {
-    this.showPlayersList();
+View.prototype.initializeAfterDataLoaded = function (playersList) {
+    this.showPlayersList(playersList);
     this._showButton("endOfGame");
     this._showButton("changingStarts");
 };
@@ -242,7 +228,7 @@ View.prototype.clearWorkPlace = function () {
 * @method sthowPlayersList
 * @author Jan Herzan
 */
-View.prototype.showPlayersList = function () {
+View.prototype.showPlayersList = function (playerList) {
     this.clearWorkPlace();
 
     this.workPlace.addClass('isDropable');
@@ -258,7 +244,6 @@ View.prototype.showPlayersList = function () {
     document.querySelector("#" + this.siteMenu.attr("id")).addEventListener('dragover', this._dragOverHandlerSiteMenu.bind(this));
 
 
-    var playerList = this.data.getData();
     for (var i = 0; i < playerList.length; i++) {
         if ($('#' + this.prefix + 'player' + playerList[i].playerNumber).length !== 0) {
             continue;
@@ -278,7 +263,10 @@ View.prototype.showPlayersList = function () {
 
         document.querySelector("#" + actualNumber.attr("id")).addEventListener('dragend', this.dragEndFunction.bind(this), false);
 
-        actualNumber.on('click', this.playerClickFunction.bind(this));
+        actualNumber.on('click', (function (s) {
+            var playerNumber = $('#' + s.currentTarget.id).data('playerNumber');
+            this.viewEvents.fireEvent("numberClicked", { playerNumber: playerNumber });
+        }).bind(this));
     }
 };
 
@@ -291,18 +279,6 @@ View.prototype.showPlayersList = function () {
 */
 View.prototype.dragStartFunction = function (e) {
     e.dataTransfer.setData('text', e.target.id);
-};
-
-/**
-* Player click function
-*
-* @method playerClickFunction
-* @author Jan Herzan
-* @param {Object} Click function param
-*/
-View.prototype.playerClickFunction = function (s) {
-    var playerNumber = $('#' + s.currentTarget.id).data('playerNumber');
-    this.showDataForPlayer(playerNumber);
 };
 
 /**
@@ -320,13 +296,13 @@ View.prototype.contextMenuFunction = function (e) {
         if ($('#' + this.prefix + 'siteMenu').children().size() < 5) {
             $('#' + this.prefix + 'siteMenu').append(currentElement);
             this.changeButtonClassesAsShadeFromDeck(currentElement);
-            this.changeButtonClassesToNormalButton(currentElement);
+            this.changeButtonClassesToNormalButton();
         }
     } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
         if (this.workPlace.hasClass('isDropable')) {
             $('#' + this.prefix + 'workPlace').append(currentElement);
             this.changeButtonClassesAsShadeFromBoard(currentElement);
-            this.changeButtonClassesToNormalButton(currentElement);
+            this.changeButtonClassesToNormalButton();
         }
     }
 };
@@ -342,7 +318,7 @@ View.prototype.dragEndFunction = function (e) {
     e.preventDefault();
     var data = e.dataTransfer.getData("text");
     var child = $('#' + data);
-    this.changeButtonClassesToNormalButton(child);
+    this.changeButtonClassesToNormalButton();
 };
 
 /**
@@ -352,15 +328,16 @@ View.prototype.dragEndFunction = function (e) {
 * @author Jan Herzan
 * @param {Object} Button
 */
-View.prototype.changeButtonClassesToNormalButton = function (button) {
+View.prototype.changeButtonClassesToNormalButton = function () {
     setTimeout((function () {
         var i, but;
-        var numberOfPlayers = this.data.getHighestPlayerNumber();
 
-        for (i = 0; i <= numberOfPlayers; i++) {
+        for (i = 0; i <= 26; i++) {
             but = $('#' + this.prefix + 'player' + i);
-            but.removeClass("siteMenuButtonBlank");
-            but.addClass("siteMenuButtonUnselected");
+            if (but !== undefined) {
+                but.removeClass("siteMenuButtonBlank");
+                but.addClass("siteMenuButtonUnselected");
+            }
         }
     }).bind(this), 0);
 };
@@ -431,10 +408,10 @@ View.prototype._insertWorkPlace = function () {
 * @author Jan Herzán
 * @param {Integer} player number
 */
-View.prototype.showDataForPlayer = function (playerNumber) {
+View.prototype.showDataForPlayer = function (actualShowedPlayer) {
     this.clearWorkPlace();
-
-    this.actualShowedPlayer = this.data.getDataOfPlayer(playerNumber);
+    this.actualShowedPlayer = actualShowedPlayer;
+    var playerNumber = this.actualShowedPlayer.playerNumber;
 
     this.workPlace.append('<div id="' + this.prefix + 'basicIncrementalButtons' + '" class="basicIncrementalButtons"></div>');
     var placeForIncrementalButtons = $('#' + this.prefix + 'basicIncrementalButtons');
@@ -463,7 +440,7 @@ View.prototype.showDataForPlayer = function (playerNumber) {
     this.createNonIncrementalButton('penaltyShotsIB', playerNumber, placeForIncrementalButtons, this.createPenaltyShotDialog, "penaltsGetted");
     this.createNonIncrementalButton('penaltyShotsSuccIB', playerNumber, placeForIncrementalButtons, this.createPenaltyShotDialog, "penaltsScored");
 
-    this.workPlace.append('<div class="name" id="' + this.prefix + 'nameOfPlayer">' + playerNumber + ' |  ' + this.actualShowedPlayer.name + '</div>');
+    this.workPlace.append('<div class="name" id="' + this.prefix + 'nameOfPlayer">' + this.actualShowedPlayer.playerNumber + ' |  ' + this.actualShowedPlayer.name + '</div>');
     this.setPlayerNameBoxClass();
 
     this.workPlace.append('<div id="' + this.prefix + 'playground' + playerNumber + '" class="playground"></div>');
@@ -574,7 +551,11 @@ View.prototype.createIncrementalButton = function (idOfTheButton, idOfPlayer, wo
     $('#' + this.prefix + idOfTheButton + idOfPlayer).incrementalButton({
         value: this.actualShowedPlayer[variableName], maxBound: -1,
         valueChanged: (function (value, element) {
-            this.actualShowedPlayer[variableName] = value;
+            this.viewEvents.fireEvent("addDataNodeForPlayer", {
+                playerNumber: this.actualShowedPlayer.playerNumber,
+                valueChanged: variableName,
+                value: value
+                });
         }).bind(this)
     });
 };
@@ -613,7 +594,6 @@ View.prototype.createIncrementalFaulButton = function (idOfTheButton, idOfPlayer
     $('#' + this.prefix + idOfTheButton + idOfPlayer).incrementalButton({
         value: this.actualShowedPlayer[variableName],
         valueChanged: (function (value, element) {
-            this.actualShowedPlayer[variableName] = value;
             if (value == 4) {
                 element.css({ "background-color": "orange" });
             } else if (value == 5) {
@@ -621,8 +601,22 @@ View.prototype.createIncrementalFaulButton = function (idOfTheButton, idOfPlayer
             } else {
                 element.css({ "background-color": "green" });
             }
+
+            this.viewEvents.fireEvent("playerValueStateChanged", {
+                playerNumber: this.actualShowedPlayer.playerNumber,
+                valueChanged: variableName,
+                value: value
+            });
         }).bind(this)
     });
+
+    if (this.actualShowedPlayer[variableName] == 4) {
+        $('#' + this.prefix + idOfTheButton + idOfPlayer).css({ "background-color": "orange" });
+    } else if (this.actualShowedPlayer[variableName] == 5) {
+        $('#' + this.prefix + idOfTheButton + idOfPlayer).css({ "background-color": "red" });
+    } else {
+        $('#' + this.prefix + idOfTheButton + idOfPlayer).css({ "background-color": "green" });
+    }
 };
 
 /**
@@ -663,7 +657,9 @@ View.prototype._insertButtonIntoMainMenu = function (content, id, functionality,
     }
 
     $('#' + this.prefix + 'mainMenu').append('<div class="mainMenuButton mainMenuButtonDimension ' + extraType + '" id="' + this.prefix + id + '">' + content + '</div>');
-    $('#' + this.prefix + id).on('click', functionality.bind(this));
+    $('#' + this.prefix + id).on('click', (function () {
+        this.viewEvents.fireEvent(functionality, {})
+    }).bind(this));
 };
 
 /**
@@ -723,7 +719,7 @@ View.prototype._dropHandlerSiteMenu = function (e) {
 
     if (target.children().size() < 5) {
         this.changeButtonClassesAsShadeFromDeck(child);
-        this.changeButtonClassesToNormalButton(child);
+        this.changeButtonClassesToNormalButton();
         target.append(child);
     }
 };
@@ -767,6 +763,6 @@ View.prototype._dropHandlerWorkPlace = function (e) {
     }
 
     this.changeButtonClassesAsShadeFromBoard(child);
-    this.changeButtonClassesToNormalButton(child);
+    this.changeButtonClassesToNormalButton();
     target.append(child);
 };
