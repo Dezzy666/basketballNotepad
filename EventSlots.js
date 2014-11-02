@@ -79,3 +79,22 @@ EventSlots.prototype.transformData = function (data) {
 
     return data;
 }
+
+/**
+* Returns object without transformation
+*
+* @method getClearObject
+* @author Jan Herzan
+* @param {Object} Transformed data
+* @return {Object} Data without transformation properties
+*/
+EventSlots.getClearObject = function (data) {
+    var clearDataObject = {};
+    for (var key in data) {
+        if (key !== "aborted" && key !== "continueOnAbort") {
+            clearDataObject[key] = data[key]
+        }
+    }
+
+    return clearDataObject;
+}

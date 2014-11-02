@@ -11,7 +11,11 @@
 * @author Jan Herzan
 */
 function Data() {
-    this.players = [];
+    this.data = {};
+    this.data.version = "2.0";
+    this.data.team = {};
+    this.data.opponent = {};
+    this.data.players = [];
     this.highestPlayerNumber = 0;
 }
 
@@ -24,7 +28,7 @@ function Data() {
 Data.prototype.loadEmptyNumbers = function () {
     var i;
     for (i = 4; i < 26; i++) {
-        this.players.push(this.createPlayer(i, "Hráč " + i));
+        this.data.players.push(this.createPlayer(i, "Hráč " + i));
     }
 };
 
@@ -48,7 +52,7 @@ Data.prototype.loadDataFromJSON = function (data) {
     if (transformedData.players !== undefined) {
         for (i = 0; i < transformedData.players.length; i++) {
             if (transformedData.players[i].playerNumber !== undefined && transformedData.players[i].playerName !== undefined) {
-                this.players.push(this.createPlayer(transformedData.players[i].playerNumber, transformedData.players[i].playerName, transformedData.players[i].nick));
+                this.data.players.push(this.createPlayer(transformedData.players[i].playerNumber, transformedData.players[i].playerName, transformedData.players[i].nick));
             } else {
                 return false;
             }
@@ -77,7 +81,7 @@ Data.prototype.loadCompleteDataFromJSON = function (data) {
         return false;
     }
 
-    this.players = transformedData.players;
+    this.data = transformedData.players;
 }
 
 /**
@@ -107,7 +111,7 @@ Data.prototype.createPlayer = function (playerNumber, playerName, nick) {
 * @author Jan Herzan
 */
 Data.prototype.getData = function () {
-    return this.players;
+    return this.data;
 };
 
 /**
@@ -117,7 +121,7 @@ Data.prototype.getData = function () {
 * @author Jan Herzan
 */
 Data.prototype.getPlayersList = function () {
-    return this.players;
+    return this.data.players;
 }
 
 /**
@@ -129,21 +133,57 @@ Data.prototype.getPlayersList = function () {
 * @return {Object} Players data
 */
 Data.prototype.getDataOfPlayer = function (playerNumber) {
-    for (var i = 0; i < this.players.length; i++) {
-        if (this.players[i].playerNumber === playerNumber) {
-            return this.players[i];
+    for (var i = 0; i < this.data.players.length; i++) {
+        if (this.data.players[i].playerNumber === playerNumber) {
+            return this.data.players[i];
         }
     }
 
     return undefined;
 };
 
+/**
+* Add players data node
+*
+* @method playerDataChanged
+* @author Jan Herzan
+* @param {Integer} Players number
+* @param {Object} Changed data
+*/
 Data.prototype.playerDataChanged = function (playerNumber, dataNode) {
-    console.log("PN " + playerNumber);
-    for (var key in dataNode) {
-        console.log("NODE KEY: " + key);
-        console.log("NODE VALUE: " + dataNode[key]);
+    var clearDataNode = EventSlots.getClearObject(dataNode);
+    var playerData = this.getDataOfPlayer(playerNumber);
+
+    if (dataNode.valueChanged !== undefined && dataNode.value !== undefined) {
+        playerData[dataNode.valueChanged] = dataNode.value;
+    } else if (dataNode.valueIncreased !== undefined) {
+        playerData[dataNode.valueIncreased]++;
+    } else if (dataNode.penaltyScored !== undefined) {
+        if (dataNode.penaltyScored) {
+            playerData.penaltsScored++;
+        }
+        playerData.penaltsGetted++;
+    } else {
+        console.log("WARNING: UNSIGNED DATA");
     }
+
+    console.log("PN " + playerNumber);
+    for (var key in clearDataNode) {
+        console.log("NODE KEY: " + key);
+        console.log("NODE VALUE: " + clearDataNode[key]);
+    }
+}
+
+/**
+* Adds shot into data
+*
+* @method addShot
+* @author Jan Herzan
+* @param {Integer} Players number
+* @param {Object} Shot object
+*/
+Data.prototype.addShot = function (playerNumber, shotData) {
+    this.getDataOfPlayer(playerNumber).shots.push(shotData);
 }
 
 /**
@@ -165,7 +205,7 @@ Data.prototype.getHighestPlayerNumber = function () {
 * @param {String} File name
 */
 Data.prototype.exportDataInLink = function (filename) {
-    var exportedData = JSON.stringify(this.players);
+    var exportedData = JSON.stringify(this.data);
     var file = document.createElement('a');
     file.download = filename;
     file.href = "data:text/plain;charset=UTF-8," + exportedData;

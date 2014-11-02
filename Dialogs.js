@@ -153,12 +153,12 @@ View.prototype.stateChangedShot = function (value) {
     for (i = 0; i < this.yesNoTupples.length; i++) {
         this.viewEvents.fireEvent("addDataNodeForPlayer", {
             playerNumber: this.actualShowedPlayer.playerNumber,
-            valueChanged: "shotsUnderBasket"
+            valueIncreased: "shotsUnderBasket"
         });
         if (this.yesNoTupples[i].yesNoTupple("option", "value") === 1) {
             this.viewEvents.fireEvent("addDataNodeForPlayer", {
                 playerNumber: this.actualShowedPlayer.playerNumber,
-                valueChanged: "shotsUnderBasketScored"
+                valueIncreased: "shotsUnderBasketScored"
             });
         }
     }

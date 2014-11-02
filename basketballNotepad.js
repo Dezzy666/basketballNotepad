@@ -49,6 +49,16 @@ $.widget("perfectLongBowLib.basketballNotepad", {
             }
             this.data.playerDataChanged(params.playerNumber, params);
         }).bind(this));
+
+
+        this.view.viewEvents.addEventListener("addShot", (function (params) {
+            if (params.playerNumber === undefined) {
+                console.log("UNKNOWN PLAYER");
+                return;
+            }
+            this.data.addShot(params.playerNumber, params);
+            this.view.showDataForPlayer(this.data.getDataOfPlayer(params.playerNumber));
+        }).bind(this));
     }
 
 });
