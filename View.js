@@ -25,6 +25,7 @@ function View(element, prefix) {
     this._insertSiteMenu();
 
     this.viewEvents = new EventSlots();
+    this.playgroundEvents = undefined;
 
     this.turnOfTheBoard = 0;
 

@@ -112,7 +112,9 @@ View.prototype.insertPlayground = function (space) {
 
     this.setClassForOrientation();
 
-    space.on('click',
+    this.playgroundEvents = new EventSlots(space.get(0));
+
+    this.playgroundEvents.addEventListener('click',
     (function (e) {
         var positionX = e.pageX - $('#' + e.currentTarget.id).offset().left;
         var positionY = e.pageY - $('#' + e.currentTarget.id).offset().top;

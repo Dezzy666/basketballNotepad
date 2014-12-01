@@ -13,7 +13,7 @@
 function Data() {
     this.data = {};
     this.data.version = "2.0";
-    this.data.team = {};
+    this.data.wholeMatchEvents = [];
     this.data.opponent = {};
     this.data.players = [];
     this.highestPlayerNumber = 0;
@@ -167,11 +167,16 @@ Data.prototype.playerDataChanged = function (playerNumber, dataNode) {
         console.log("WARNING: UNSIGNED DATA");
     }
 
-    console.log("PN " + playerNumber);
-    for (var key in clearDataNode) {
-        console.log("NODE KEY: " + key);
-        console.log("NODE VALUE: " + clearDataNode[key]);
-    }
+    this.addDataInotTable(playerNumber, clearDataNode);
+}
+
+Data.prototype.addDataInotTable = function (playerNumber, data) {
+    this.data.wholeMatchEvents.push({
+        team: "A",
+        playerNode: true,
+        playerNumber: playerNumber,
+        nodeData: data
+    });
 }
 
 /**
@@ -183,7 +188,9 @@ Data.prototype.playerDataChanged = function (playerNumber, dataNode) {
 * @param {Object} Shot object
 */
 Data.prototype.addShot = function (playerNumber, shotData) {
-    this.getDataOfPlayer(playerNumber).shots.push(shotData);
+    var cleanShotData = EventSlots.getClearObject(shotData);
+    this.getDataOfPlayer(playerNumber).shots.push(cleanShotData);
+    this.addDataInotTable(playerNumber, cleanShotData);
 }
 
 /**
