@@ -17,6 +17,7 @@ $.widget("perfectLongBowLib.basketballNotepad", {
         this.data = new Data();
 
         this.view.viewEvents.addEventListener("changingButtonPressed", (function () {
+            this.view.createTimeGettingDialog();
             this.view.showPlayersList(this.data.getPlayersList());
         }).bind(this));
 

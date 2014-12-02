@@ -55,6 +55,85 @@ View.prototype.createUnderDeskShotDialog = function () {
 };
 
 /**
+* Creates dialog for time insertion
+*
+* @method createTimeGettingDialog
+* @author Jan Herzán
+*/
+View.prototype.createTimeGettingDialog = function () {
+    this.clearDialogElement();
+    this.dialogElement.dialog("option", "title", "Čas střídání");
+    this.addTimeElementsIntoDialog();
+    this.dialogElement.dialog("option", "width", 350);
+    this.dialogElement.dialog("open");
+};
+
+/**
+* Adds "time display" into dialog
+*
+* @method addTimeElementsIntoDialog
+* @author Jan Herzán
+*/
+View.prototype.addTimeElementsIntoDialog = function () {
+    this.dialogElement.append('<div class="timeGettingNumbers timeGettingNumbersTimeShowers" id="' + this.prefix + 'TimeGetterMinute0">0</div>');
+    this.dialogElement.append('<div class="bigDobleDott">:</div>');
+    this.dialogElement.append('<div class="timeGettingNumbers timeGettingNumbersTimeShowers" id="' + this.prefix + 'TimeGetterMinute1">0</div>');
+    this.dialogElement.append('<div class="timeGettingNumbers timeGettingNumbersTimeShowers" id="' + this.prefix + 'TimeGetterMinute2">0</div>');
+
+    this.positionOfCursor = 0;
+    this.setCursorColored();
+
+    this.dialogElement.append('<div class="keyBoard" id="' + this.prefix + 'KeyBoard"></div>');
+
+    var keyBoard = $("#" + this.prefix + "KeyBoard");
+
+    for (var i = 1; i < 10; i++) {
+        keyBoard.append('<div class="timeGettingNumbers" id="' + this.prefix + 'TimeKeybordNumber' + i + '">' + i + '</div>');
+        $('#' + this.prefix + 'TimeKeybordNumber' + i).click(this.numberClickHandler.bind(this));
+    }
+
+    keyBoard.append('<div class="timeGettingNumbers zero" id="' + this.prefix + 'TimeKeybordNumber0">0</div>');
+
+    $('#' + this.prefix + 'TimeKeybordNumber0').on("click", this.numberClickHandler.bind(this));
+
+    keyBoard.append('<div class="timeGettingNumbers ok" id="' + this.prefix + 'TimeGetterMinute">OK</div>');
+};
+
+/**
+* Colors right number on "display"
+*
+* @method setCursorColored
+* @author Jan Herzán
+*/
+View.prototype.setCursorColored = function () {
+    for (var i = 0; i < 3; i++) {
+        $("#" + this.prefix + "TimeGetterMinute" + i).css({ "background-color": "white" });
+    }
+    $("#" + this.prefix + "TimeGetterMinute" + this.positionOfCursor).css({ "background-color": "lightgray" });
+};
+
+/**
+* Handler for number clicking
+*
+* @method numberClickHandler
+* @author Jan Herzán
+* @param {Object} params of click handler
+*/
+View.prototype.numberClickHandler = function (e) {
+    var name = e.currentTarget.id;
+    var number = parseInt(name.substring(name.length - 1));
+
+    if (this.positionOfCursor == 1 && number > 5) {
+        return;
+    }
+
+    $("#" + this.prefix + "TimeGetterMinute" + this.positionOfCursor).html(number);
+    this.positionOfCursor++;
+    this.positionOfCursor %= 3;
+    this.setCursorColored();
+};
+
+/**
 * Creates penalty shot dialog
 *
 * @method createPenaltyShotDialog
