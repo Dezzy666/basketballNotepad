@@ -37,21 +37,21 @@ EventSlots.prototype.addEventListener = function (event, handler) {
  * @param {Object} eventParams
  * @return if the operation was aborted (true means aborted operation)
  */
-EventSlots.prototype.fireEvent = function (event, eventParams) {
+EventSlots.prototype.fireEvent = function (event, params) {
     var handlers = this.callbacks[event];
     if (handlers === undefined) { return; } // no specific events
 
     var i;
-    var isAborted = false;
-    eventParams = this.transformData(eventParams);
+    eventParams = this.transformData(params);
 
     for (i = 0; i < handlers.length; i++) {
-        if (eventParams.continueOnAbort || !eventParams.aborted) {
-            isAborted |= handlers[i](eventParams);
+        if (!eventParams.continueOnAbort && eventParams.aborted) {
+            return true;
         }
+        handlers[i](eventParams);
     }
 
-    return isAborted;
+    return eventParams.aborted;
 };
 
 /**
