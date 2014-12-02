@@ -54,6 +54,8 @@ Data.prototype.loadDataFromJSON = function (data) {
             if (transformedData.players[i].playerNumber !== undefined && transformedData.players[i].playerName !== undefined) {
                 this.data.players.push(this.createPlayer(transformedData.players[i].playerNumber, transformedData.players[i].playerName, transformedData.players[i].nick));
             } else {
+                console.log("UNLOADABLE PLAYER");
+                console.log(transformedData.players[i]);
                 return false;
             }
         }

@@ -165,11 +165,11 @@ View.prototype.loadDataFromFileWindow = function () {
 
     $('#' + this.prefix + 'LoadDataFromFileButton').on('click', (function (e) {
         if (this.tempData !== undefined) {
-            if (this.viewEvents.fireEvent("loadDataFromJSON",this.tempData)) {
+            if (this.viewEvents.fireEvent("loadDataFromJSON", { fileData: this.tempData })) {
                 alert("Data se nepodařilo načíst");
                 return;
             }
-            this.viewEvents.addEventListener("loadMainProgram", {});
+            this.viewEvents.fireEvent("loadMainProgram", {});
         }
     }).bind(this));
 };

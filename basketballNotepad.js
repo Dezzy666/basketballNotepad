@@ -29,9 +29,15 @@ $.widget("perfectLongBowLib.basketballNotepad", {
             this.view.initializeAfterDataLoaded(this.data.getPlayersList());
         }).bind(this));
 
+        this.view.viewEvents.addEventListener("loadDataFromJSON", (function (params) {
+            if (!this.data.loadDataFromJSON(params.fileData)) {
+                params.aborted = true;
+            }
+        }).bind(this));
+
         this.view.viewEvents.addEventListener("loadMainProgram", (function () {
-            this.initializeAfterDataLoaded(this.data.getPlayersList());
-        }).bind());
+            this.view.initializeAfterDataLoaded(this.data.getPlayersList());
+        }).bind(this));
 
         this.view.viewEvents.addEventListener("numberClicked", (function (params) {
             this.view.showDataForPlayer(this.data.getDataOfPlayer(params.playerNumber));
