@@ -413,7 +413,7 @@ body {
     }
 
     .siteMenuButton {
-        margin-top: 25px;
+        margin-top: 9px;
         margin-left: 5px;
     }
 
@@ -597,6 +597,29 @@ body {
     border: 3px dotted gray;
 }
 
+.siteMenu .Other {
+    position: absolute;
+    height: 84px;
+    width: 84px;
+    line-height: 90px;
+    font-size: 30px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: #660066;
+    color: white;
+    border: 3px black solid;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-left: 5px;
+    margin-top: 502px;
+}
+
 /*******************************************************************************************************************/
 
 .faulPlus {
@@ -695,6 +718,59 @@ body {
     vertical-align: middle;
     cursor: pointer;
 }
+
+.ui-dialog .bigDobleDott {
+    font-size: 45px;
+    height: 70px;
+    width: 20px;
+    float:left;
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+.timeGettingNumbers {
+    height: 84px;
+    width: 84px;
+    line-height: 90px;
+    font-size: 60px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 3px black solid;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    float: left;
+    margin-left: 5px;
+}
+
+.keyBoard {
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 8px;
+    float: left;
+}
+
+    .keyBoard .timeGettingNumbers {
+        margin-left: 5px;
+        margin-top: 5px;
+    }
+
+    .keyBoard .zero {
+        margin-left: 100px;
+    }
+
+    .keyBoard .ok {
+        background-color: #660066;
+        color: white;
+        font-size: 35px;
+    }
 
 .version {
     margin: 0 auto;

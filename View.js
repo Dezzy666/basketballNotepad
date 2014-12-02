@@ -294,7 +294,7 @@ View.prototype.contextMenuFunction = function (e) {
     e.preventDefault();
 
     if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'workPlace') {
-        if ($('#' + this.prefix + 'siteMenu').children().size() < 5) {
+        if ($('#' + this.prefix + 'siteMenu').children().size() < 6) {
             $('#' + this.prefix + 'siteMenu').append(currentElement);
             this.changeButtonClassesAsShadeFromDeck(currentElement);
             this.changeButtonClassesToNormalButton();
@@ -640,6 +640,7 @@ View.prototype._insertMainMenu = function () {
 View.prototype._insertSiteMenu = function () {
     this.parentElement.append('<div id="' + this.prefix + 'siteMenu" class="siteMenu siteMenuDimension"></div>');
     this.siteMenu = $('#' + this.prefix + 'siteMenu');
+    this.siteMenu.append('<div class="Other">Další</div>');
 };
 
 /**
@@ -695,7 +696,7 @@ View.prototype._dragOverHandlerSiteMenu = function (e) {
         return;
     }
 
-    if (target.children().size() < 5) {
+    if (target.children().size() < 6) {
         this.changeButtonClassesAsShadeFromDeck(child);
         target.append(child);
     }
@@ -718,7 +719,7 @@ View.prototype._dropHandlerSiteMenu = function (e) {
         return;
     }
 
-    if (target.children().size() < 5) {
+    if (target.children().size() < 6) {
         this.changeButtonClassesAsShadeFromDeck(child);
         this.changeButtonClassesToNormalButton();
         target.append(child);
