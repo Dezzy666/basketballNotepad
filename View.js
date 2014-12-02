@@ -39,6 +39,18 @@ function View(element, prefix) {
 
     this._hideButton("changingStarts");
 
+    this._insertButtonIntoMainMenu("Konec střídání", "changingEnds",
+    "changingEndsButtonPressed",
+    "mainMenuButtonChanging");
+
+    this._hideButton("changingEnds");
+
+    this._insertButtonIntoMainMenu("Statistiky", "statistics",
+    "statisticsButtonPressed",
+    "mainMenuButtonChanging");
+
+    this._hideButton("statistics");
+
     this._insertButtonIntoMainMenu("Konec utkání", "endOfGame",
         "endgameButtonPressed",
         "mainMenuButtonNormal");
@@ -199,6 +211,8 @@ View.prototype.initializeAfterDataLoaded = function (playersList) {
     this.showPlayersList(playersList);
     this._showButton("endOfGame");
     this._showButton("changingStarts");
+    this._showButton("statistics");
+    this._showButton("others");
 };
 
 /**
@@ -640,7 +654,9 @@ View.prototype._insertMainMenu = function () {
 View.prototype._insertSiteMenu = function () {
     this.parentElement.append('<div id="' + this.prefix + 'siteMenu" class="siteMenu siteMenuDimension"></div>');
     this.siteMenu = $('#' + this.prefix + 'siteMenu');
-    this.siteMenu.append('<div class="Other">Další</div>');
+    this.siteMenu.append('<div class="Other" id="' + this.prefix + 'others">Další</div>');
+    this.buttonOthers = $("#" + this.prefix + "others");
+    this._hideButton("others");
 };
 
 /**
