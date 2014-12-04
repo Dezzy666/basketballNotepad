@@ -38,6 +38,16 @@ View.prototype.insertDialog = function () {
 */
 View.prototype.clearDialogElement = function () {
     this.dialogElement.empty();
+    this.dialogElement.dialog({
+        close: function (event, ui) {
+        }
+    });
+
+    this.dialogElement.dialog("option", "position", {
+        my: "center",
+        at: "center",
+        of: this.parentElement
+    });
 };
 
 /**
@@ -59,13 +69,19 @@ View.prototype.createUnderDeskShotDialog = function () {
 *
 * @method createTimeGettingDialog
 * @author Jan Herzán
+* @param {Function} Handler which is called when value is inserted.
 */
-View.prototype.createTimeGettingDialog = function () {
+View.prototype.createTimeGettingDialog = function (handler) {
     this.clearDialogElement();
     this.dialogElement.dialog("option", "title", "Čas střídání");
-    this.addTimeElementsIntoDialog();
+    this.addTimeElementsIntoDialog(handler);
     this.dialogElement.dialog("option", "width", 350);
     this.dialogElement.dialog("open");
+    this.dialogElement.dialog({
+        close: function (event, ui) {
+            handler(undefined);
+        }
+    });
 };
 
 /**
@@ -73,8 +89,9 @@ View.prototype.createTimeGettingDialog = function () {
 *
 * @method addTimeElementsIntoDialog
 * @author Jan Herzán
+* @param {Function} Handler for returning value
 */
-View.prototype.addTimeElementsIntoDialog = function () {
+View.prototype.addTimeElementsIntoDialog = function (handler) {
     this.dialogElement.append('<div class="timeGettingNumbers timeGettingNumbersTimeShowers" id="' + this.prefix + 'TimeGetterMinute0">0</div>');
     this.dialogElement.append('<div class="bigDobleDott">:</div>');
     this.dialogElement.append('<div class="timeGettingNumbers timeGettingNumbersTimeShowers" id="' + this.prefix + 'TimeGetterMinute1">0</div>');
@@ -96,7 +113,15 @@ View.prototype.addTimeElementsIntoDialog = function () {
 
     $('#' + this.prefix + 'TimeKeybordNumber0').on("click", this.numberClickHandler.bind(this));
 
-    keyBoard.append('<div class="timeGettingNumbers ok" id="' + this.prefix + 'TimeGetterMinute">OK</div>');
+    keyBoard.append('<div class="timeGettingNumbers ok" id="' + this.prefix + 'TimeOK">OK</div>');
+
+    $("#" + this.prefix + "TimeOK").on("click", (function (e) {
+        handler({
+            minutes: parseInt($('#' + this.prefix + 'TimeGetterMinute0').html()),
+            seconds: parseInt($('#' + this.prefix + 'TimeGetterMinute1').html()) * 10 + parseInt($('#' + this.prefix + 'TimeGetterMinute2').html())
+        });
+        this.dialogElement.dialog("close");
+    }).bind(this));
 };
 
 /**

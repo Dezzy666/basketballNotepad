@@ -208,9 +208,9 @@ View.prototype.noLoadDataWindow = function () {
 * @author Jan Herzan
 */
 View.prototype.initializeAfterDataLoaded = function (playersList) {
-    this.showPlayersList(playersList);
+    this.showPlayersList(playersList, this.switchPositionOfPlayerButtonHandler);
     this._showButton("endOfGame");
-    this._showButton("changingStarts");
+    this._showButton("changingEnds");
     this._showButton("statistics");
     this._showButton("others");
 };
@@ -243,28 +243,18 @@ View.prototype.clearWorkPlace = function () {
 * @method sthowPlayersList
 * @author Jan Herzan
 */
-View.prototype.showPlayersList = function (playerList) {
+View.prototype.showPlayersList = function (playerList, onClickHandler) {
     this.clearWorkPlace();
 
-    this.workPlace.addClass('isDropable');
-    this.workPlace.addClass('dropableUnlimited');
-    this.workPlace.attr("draggable", "true");
-
-    this.siteMenu.addClass('isDropable');
-    this.siteMenu.attr("draggable", "true");
-
-    document.querySelector("#" + this.workPlace.attr("id")).addEventListener('drop', this._dropHandlerWorkPlace.bind(this));
-    document.querySelector("#" + this.workPlace.attr("id")).addEventListener('dragover', this._dragOverHandlerWorkPlace.bind(this));
-    document.querySelector("#" + this.siteMenu.attr("id")).addEventListener('drop', this._dropHandlerSiteMenu.bind(this));
-    document.querySelector("#" + this.siteMenu.attr("id")).addEventListener('dragover', this._dragOverHandlerSiteMenu.bind(this));
-
+    this.workPlace.append('<div class="placeForPlayers" id="' + this.prefix + 'placeForPlayers"></div>');
+    var placeForPlayers = $("#" + this.prefix + "placeForPlayers");
 
     for (var i = 0; i < playerList.length; i++) {
         if ($('#' + this.prefix + 'player' + playerList[i].playerNumber).length !== 0) {
             continue;
         }
 
-        this.workPlace.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerButtonDimension playerListButton siteMenuButtonUnselected" draggable="true">' +
+        placeForPlayers.append('<div id="' + this.prefix + 'player' + playerList[i].playerNumber + '" class="playerButton playerButtonDimension playerListButton siteMenuButtonUnselected" draggable="true">' +
             '<div class="playerNick">' + playerList[i].nick + '</div>' +
             playerList[i].playerNumber +
             '</div>');
@@ -272,16 +262,7 @@ View.prototype.showPlayersList = function (playerList) {
         actualNumber.data('prefix', this.prefix);
         actualNumber.data('playerNumber', playerList[i].playerNumber);
 
-        document.querySelector("#" + actualNumber.attr("id")).addEventListener('dragstart', this.dragStartFunction.bind(this), false);
-
-        actualNumber.on('contextmenu', this.contextMenuFunction.bind(this));
-
-        document.querySelector("#" + actualNumber.attr("id")).addEventListener('dragend', this.dragEndFunction.bind(this), false);
-
-        actualNumber.on('click', (function (s) {
-            var playerNumber = $('#' + s.currentTarget.id).data('playerNumber');
-            this.viewEvents.fireEvent("numberClicked", { playerNumber: playerNumber });
-        }).bind(this));
+        actualNumber.on('click', onClickHandler.bind(this));
     }
 };
 
@@ -297,28 +278,77 @@ View.prototype.dragStartFunction = function (e) {
 };
 
 /**
-* Context menu function
+* Switchs handlers in site medu to start changing
 *
-* @method contextMenuFunction
+* @method switchHandlersForChanging
 * @author Jan Herzan
-* @param {Object} Context menu function param
 */
-View.prototype.contextMenuFunction = function (e) {
+View.prototype.switchHandlersForChanging = function () {
+    $(".siteMenu .playerButton").unbind('click');
+    $(".siteMenu .playerButton").on('click', this.switchPositionOfPlayerButtonHandler.bind(this));
+}
+
+/**
+* Switchs handlers in site medu to start showing player data
+*
+* @method switchHandlersForPlaying
+* @author Jan Herzan
+*/
+View.prototype.switchHandlersForPlaying = function () {
+    $(".siteMenu .playerButton").unbind('click');
+    $(".siteMenu .playerButton").on('click', this.showPlayerDataHandler.bind(this));
+}
+
+/**
+* Gets numbers of players on the boarder in array.
+*
+* @method switchHandlersForPlaying
+* @author Jan Herzan
+* @return {Array} Players numbers
+*/
+View.prototype.getPlayersOnTheGround = function () {
+    var playersNumbers = [];
+
+    $(".siteMenu .playerButton").each(function () {
+        playersNumbers.push($(this).data('playerNumber'));
+    });
+
+    return playersNumbers;
+}
+
+/**
+* Shows players data
+*
+* @method showPlayerDataHandler
+* @author Jan Herzán
+* @param {Object} Handler params
+*/
+View.prototype.showPlayerDataHandler = function (e) {
+    var playerNumber = $('#' + e.currentTarget.id).data('playerNumber');
+    this.viewEvents.fireEvent("numberClicked", { playerNumber: playerNumber });
+}
+
+/**
+* Changes position of the player button
+*
+* @method switchPositionOfPlayerButtonHandler
+* @author Jan Herzan
+* @param {Object} Handler params
+*/
+View.prototype.switchPositionOfPlayerButtonHandler = function (e) {
     var currentElement = $('#' + e.currentTarget.id);
     e.preventDefault();
 
-    if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'workPlace') {
+    if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'placeForPlayers') {
         if ($('#' + this.prefix + 'siteMenu').children().size() < 6) {
             $('#' + this.prefix + 'siteMenu').append(currentElement);
             this.changeButtonClassesAsShadeFromDeck(currentElement);
             this.changeButtonClassesToNormalButton();
         }
     } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
-        if (this.workPlace.hasClass('isDropable')) {
-            $('#' + this.prefix + 'workPlace').append(currentElement);
-            this.changeButtonClassesAsShadeFromBoard(currentElement);
-            this.changeButtonClassesToNormalButton();
-        }
+        $('#' + this.prefix + 'placeForPlayers').append(currentElement);
+        this.changeButtonClassesAsShadeFromBoard(currentElement);
+        this.changeButtonClassesToNormalButton();
     }
 };
 
@@ -617,7 +647,7 @@ View.prototype.createIncrementalFaulButton = function (idOfTheButton, idOfPlayer
                 element.css({ "background-color": "green" });
             }
 
-            this.viewEvents.fireEvent("playerValueStateChanged", {
+            this.viewEvents.fireEvent("addDataNodeForPlayer", {
                 playerNumber: this.actualShowedPlayer.playerNumber,
                 valueChanged: variableName,
                 value: value

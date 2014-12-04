@@ -190,6 +190,22 @@ Data.prototype.addDataIntoTableForPlayer = function (playerNumber, data) {
 }
 
 /**
+* Adds data for the team node into data component
+*
+* @method addDataIntoTableForTeam
+* @author Jan Herzan
+* @param {Integer} 1 or 2 - means team
+* @param {Object} data
+*/
+Data.prototype.addDataIntoTableForTeam = function (team, data) {
+    this.data.wholeMatchEvents.push({
+        team: team,
+        playerNode: false,
+        nodeData: data
+    });
+}
+
+/**
 * Adds shot into data
 *
 * @method addShot

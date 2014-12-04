@@ -16,9 +16,31 @@ $.widget("perfectLongBowLib.basketballNotepad", {
 
         this.data = new Data();
 
+        this.timeForChanging = { min: 10, sec: 0 };
+
         this.view.viewEvents.addEventListener("changingButtonPressed", (function () {
-            this.view.createTimeGettingDialog();
-            this.view.showPlayersList(this.data.getPlayersList());
+            if (this.timeForChanging == undefined) {
+                this.view.createTimeGettingDialog((function (time) {
+                    this.timeForChanging = time;
+                }).bind(this));
+            }
+            this.view.showPlayersList(this.data.getPlayersList(), this.view.switchPositionOfPlayerButtonHandler);
+            this.view.switchHandlersForChanging();
+            this.view._hideButton("changingStarts");
+            this.view._showButton("changingEnds");
+        }).bind(this));
+
+        this.view.viewEvents.addEventListener("changingEndsButtonPressed", (function () {
+            this.data.addDataIntoTableForTeam("A", {
+                event: "changing",
+                time: this.timeForChanging,
+                players: this.view.getPlayersOnTheGround()
+            });
+            this.view._showButton("changingStarts");
+            this.view._hideButton("changingEnds");
+            this.view.switchHandlersForPlaying();
+            this.timeForChanging = undefined;
+            this.view.clearWorkPlace();
         }).bind(this));
 
         this.view.viewEvents.addEventListener("exportDataDemand", (function () {
