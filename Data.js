@@ -169,12 +169,20 @@ Data.prototype.playerDataChanged = function (playerNumber, dataNode) {
         console.log("WARNING: UNSIGNED DATA");
     }
 
-    this.addDataInotTable(playerNumber, clearDataNode);
+    this.addDataIntoTableForPlayer(playerNumber, clearDataNode);
 }
 
-Data.prototype.addDataInotTable = function (playerNumber, data) {
+/**
+* Adds data for player node into data component
+*
+* @method addDataIntoTableForPlayer
+* @author Jan Herzan
+* @param {Integer} 1 or 2 - means team
+* @param {Object} data
+*/
+Data.prototype.addDataIntoTableForPlayer = function (playerNumber, data) {
     this.data.wholeMatchEvents.push({
-        team: "A",
+        team: 1,
         playerNode: true,
         playerNumber: playerNumber,
         nodeData: data
@@ -192,7 +200,7 @@ Data.prototype.addDataInotTable = function (playerNumber, data) {
 Data.prototype.addShot = function (playerNumber, shotData) {
     var cleanShotData = EventSlots.getClearObject(shotData);
     this.getDataOfPlayer(playerNumber).shots.push(cleanShotData);
-    this.addDataInotTable(playerNumber, cleanShotData);
+    this.addDataIntoTableForPlayer(playerNumber, cleanShotData);
 }
 
 /**
