@@ -353,20 +353,6 @@ View.prototype.switchPositionOfPlayerButtonHandler = function (e) {
 };
 
 /**
-* Drag end function
-*
-* @method dragEndFunction
-* @author Jan Herzan
-* @param {Object} DragEnd params
-*/
-View.prototype.dragEndFunction = function (e) {
-    e.preventDefault();
-    var data = e.dataTransfer.getData("text");
-    var child = $('#' + data);
-    this.changeButtonClassesToNormalButton();
-};
-
-/**
 * This method changes styles for button from shadow to normal. This progress is after timeout
 *
 * @method changeButtonClassesToNormalButton
@@ -723,94 +709,4 @@ View.prototype._insertButtonIntoMainMenu = function (content, id, functionality,
 View.prototype._insertButtonIntoSiteMenu = function (content, id, functionality) {
     $('#' + this.prefix + 'siteMenu').append('<div class="playerButton playerButtonDimension siteMenuButton" id="' + this.prefix + id + '">' + content + '</div>');
     $('#' + this.prefix + id).on('click', functionality.bind(this));
-};
-
-/**
-* DragOver handler for Site menu
-*
-* @method _dragOverHandlerSiteMenu
-* @author Jan Herzan
-* @param {Object} handler params
-*/
-View.prototype._dragOverHandlerSiteMenu = function (e) {
-    e.preventDefault();
-    var data = e.dataTransfer.getData("text");
-    var child = $('#' + data);
-    var target = $('#' + e.target.id);
-
-    if (!target.hasClass('isDropable')) {
-        return;
-    }
-
-    if (target.children().size() < 6) {
-        this.changeButtonClassesAsShadeFromDeck(child);
-        target.append(child);
-    }
-};
-
-/**
-* Drop handler for site menu
-*
-* @method _dropHandlerSiteMenu
-* @author Jan Herzan
-* @param {Object} handler params
-*/
-View.prototype._dropHandlerSiteMenu = function (e) {
-    e.preventDefault();
-    var data = e.dataTransfer.getData("text");
-    var child = $('#' + data);
-    var target = $('#' + e.target.id);
-
-    if (!target.hasClass('isDropable')) {
-        return;
-    }
-
-    if (target.children().size() < 6) {
-        this.changeButtonClassesAsShadeFromDeck(child);
-        this.changeButtonClassesToNormalButton();
-        target.append(child);
-    }
-};
-
-/**
-* Dragover handler for work place
-*
-* @method _dragOverHandlerWorkPlace
-* @author Jan Herzan
-* @param {Object} handler params
-*/
-View.prototype._dragOverHandlerWorkPlace = function (e) {
-    e.preventDefault();
-    var data = e.dataTransfer.getData("text");
-    var child = $('#' + data);
-    var target = $('#' + e.target.id);
-
-    if (!target.hasClass('isDropable')) {
-        return;
-    }
-
-    this.changeButtonClassesAsShadeFromBoard(child);
-    target.append(child);
-};
-
-/**
-* Drop handler for work place
-*
-* @method _dropHandlerWorkPlace
-* @author Jan Herzan
-* @param {Object} handler params
-*/
-View.prototype._dropHandlerWorkPlace = function (e) {
-    e.preventDefault();
-    var data = e.dataTransfer.getData("text");
-    var child = $('#' + data);
-    var target = $('#' + e.target.id);
-
-    if (!target.hasClass('isDropable')) {
-        return;
-    }
-
-    this.changeButtonClassesAsShadeFromBoard(child);
-    this.changeButtonClassesToNormalButton();
-    target.append(child);
 };
