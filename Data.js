@@ -17,6 +17,50 @@ function Data() {
     this.data.opponent = {};
     this.data.players = [];
     this.highestPlayerNumber = 0;
+    this.nextSolution = undefined;
+}
+
+/**
+* Sets winner of first solution
+*
+* @method setDefaultSolution
+* @author Jan Herzan
+* @param{String} "A" for out team, "B" for opponents team
+*/
+Data.prototype.setDefaultSolution = function (winnerOfSolution) {
+    this.nextSolution = winnerOfSolution;
+    this.addDataIntoTableForTeam("A", {
+        event: "firstSolution",
+        win: (winnerOfSolution === "A")
+    });
+    this.swapSolutionTeam();
+}
+
+/**
+* Swaps teams after new solution
+*
+* @method swapSolutionTeam
+* @author Jan Herzan
+* @param {Array} Players who contributed to.
+*/
+Data.prototype.swapSolutionTeam = function (players) {
+    switch (this.nextSolution) {
+        case "A":
+            this.nextSolution = "B";
+            break;
+        case "B":
+            this.nextSolution = "A";
+            break;
+        default:
+            throw new RuntimeExceptoion("Unknow team");
+    }
+
+    if (players !== undefined) {
+        this.addDataIntoTableForTeam({
+            event: "solution",
+            players: players
+        });
+    }
 }
 
 /**

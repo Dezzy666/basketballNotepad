@@ -772,6 +772,42 @@ body {
         font-size: 35px;
     }
 
+/*******************************************************************************************************************/
+.solution {
+    margin-top: 95px;
+    height: 400px;
+    width: 39%;
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align: center;
+    font-size: 35px;
+    float: left;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 3px black solid;
+    border-radius: 15px;
+}
+
+    .solution p {
+        font-size:75px;
+    }
+
+.weWonSolution {
+    background-color: #660066;
+    color: white;
+}
+
+.opponentWonSolution {
+    background: white;
+}
+
+
+/*******************************************************************************************************************/
+
 .version {
     margin: 0 auto;
 }

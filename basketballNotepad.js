@@ -41,6 +41,9 @@ $.widget("perfectLongBowLib.basketballNotepad", {
             this.view.switchHandlersForPlaying();
             this.timeForChanging = undefined;
             this.view.clearWorkPlace();
+            if (this.data.nextSolution === undefined) {
+                this.view.createSolutionSite();
+            }
         }).bind(this));
 
         this.view.viewEvents.addEventListener("exportDataDemand", (function () {
@@ -87,6 +90,11 @@ $.widget("perfectLongBowLib.basketballNotepad", {
             }
             this.data.addShot(params.playerNumber, params);
             this.view.showDataForPlayer(this.data.getDataOfPlayer(params.playerNumber));
+        }).bind(this));
+
+        this.view.viewEvents.addEventListener("solutionDone", (function (params) {
+            this.data.setDefaultSolution(params.team);
+            this.view.viewEvents.fireEvent("changingEndsButtonPressed", {});
         }).bind(this));
     }
 

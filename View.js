@@ -266,6 +266,20 @@ View.prototype.showPlayersList = function (playerList, onClickHandler) {
     }
 };
 
+View.prototype.createSolutionSite = function () {
+    this.clearWorkPlace();
+    this.workPlace.append('<div class="solution weWonSolution" id="' + this.prefix + 'WeWonSolution"><p>My</p> jsme vyhráli rozskok</div>');
+    this.workPlace.append('<div class="solution opponentWonSolution" id="' + this.prefix + 'OpponentWonSolution"><p>Soupeř</p> vyhrál rozskok</div>');
+
+    $("#" + this.prefix + "WeWonSolution").on("click", (function (params) {
+        this.viewEvents.fireEvent("solutionDone", {team: "A"});
+    }).bind(this));
+
+    $("#" + this.prefix + "OpponentWonSolution").on("click", (function (params) {
+        this.viewEvents.fireEvent("solutionDone", { team: "B" });
+    }).bind(this));
+}
+
 /**
 * Drag start function
 *
