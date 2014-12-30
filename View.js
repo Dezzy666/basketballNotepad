@@ -358,13 +358,28 @@ View.prototype.switchPositionOfPlayerButtonHandler = function (e) {
             $('#' + this.prefix + 'siteMenu').append(currentElement);
             this.changeButtonClassesAsShadeFromDeck(currentElement);
             this.changeButtonClassesToNormalButton();
+            this.sortNumbersAgainstNode(currentElement);
         }
     } else if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'siteMenu') {
         $('#' + this.prefix + 'placeForPlayers').append(currentElement);
         this.changeButtonClassesAsShadeFromBoard(currentElement);
         this.changeButtonClassesToNormalButton();
+        this.sortNumbersAgainstNode(currentElement);
     }
 };
+
+View.prototype.sortNumbersAgainstNode = function (node) {
+    var siblings = node.siblings();
+    console.log(siblings);
+    var pointer = siblings.length - 1;
+    while (pointer > 0
+        && !$("#" + siblings[pointer].id).hasClass("Other")
+        && $("#" + siblings[pointer].id).data('playerNumber') > node.data('playerNumber')) {
+        node.after($("#" + siblings[pointer].id));
+        console.log(siblings[pointer].id);
+        pointer--;
+    }
+}
 
 /**
 * This method changes styles for button from shadow to normal. This progress is after timeout
