@@ -51,7 +51,7 @@ function View(element, prefix) {
 
     this._hideButton("statistics");
 
-    this._insertButtonIntoMainMenu("Konec utkání", "endOfGame",
+    this._insertButtonIntoMainMenu("Konec 1. čtvrtiny", "endOfGame",
         "endgameButtonPressed",
         "mainMenuButtonNormal");
 
@@ -74,6 +74,16 @@ View.prototype.createEndingScreen = function () {
     this.createEndSendDataOnWebWindow();
     this.createEndSaveDataInFielWindow();
 };
+
+/**
+* Changes title of the game ending button
+*
+* @method changeEndingButtonTitle
+* @author Jan Herzan
+*/
+View.prototype.changeEndingButtonTitle = function (title) {
+    $("#" + this.prefix + "endOfGame").html(title);
+}
 
 /**
 * Creates ending dialog for save data on web

@@ -18,6 +18,19 @@ function Data() {
     this.data.players = [];
     this.highestPlayerNumber = 0;
     this.nextSolution = undefined;
+    this.actualQuater = 1;
+}
+
+/**
+* Increments the quater value.
+*
+* @method incrementQuater
+* @author Jan Herzan
+*/
+Data.prototype.incrementQuater = function () {
+    if (this.actualQuater < 5) {
+        this.actualQuater++;
+    }
 }
 
 /**

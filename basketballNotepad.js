@@ -71,8 +71,29 @@ $.widget("perfectLongBowLib.basketballNotepad", {
         }).bind(this));
 
         this.view.viewEvents.addEventListener("endgameButtonPressed", (function () {
+            this.data.incrementQuater();
+            switch (this.data.actualQuater) {
+                case 2:
+                    this.view.changeEndingButtonTitle("Konec 2. čtvrtiny");
+                    break;
+                case 3:
+                    this.view.changeEndingButtonTitle("Konec 3. čtvrtiny");
+                    break;
+                case 4:
+                    this.view.changeEndingButtonTitle("Konec utkání");
+                    break;
+                case 5:
+                    this.view.clearWorkPlace();
+                    this.view.createEndingScreen();
+                    return;
+            }
             this.view.clearWorkPlace();
-            this.view.createEndingScreen();
+            this.timeForChanging = { min: 10, sec: 0 };
+            this.view.showPlayersList(this.data.getPlayersList(), this.view.switchPositionOfPlayerButtonHandler);
+            this.view.switchHandlersForChanging();
+            this.view._hideButton("changingStarts");
+            this.view._hideButton("statistics");
+            this.view._showButton("changingEnds");
         }).bind(this));
 
         this.view.viewEvents.addEventListener("addDataNodeForPlayer", (function (params) {
