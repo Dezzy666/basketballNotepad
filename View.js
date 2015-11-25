@@ -211,7 +211,6 @@ View.prototype.initializeAfterDataLoaded = function (playersList) {
     this.showPlayersList(playersList, this.switchPositionOfPlayerButtonHandler);
     this._showButton("endOfGame");
     this._showButton("changingEnds");
-    this._showButton("statistics");
     // this._showButton("others");
 };
 

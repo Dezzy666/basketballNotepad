@@ -27,6 +27,7 @@ $.widget("perfectLongBowLib.basketballNotepad", {
             this.view.showPlayersList(this.data.getPlayersList(), this.view.switchPositionOfPlayerButtonHandler);
             this.view.switchHandlersForChanging();
             this.view._hideButton("changingStarts");
+            this.view._hideButton("statistics");
             this.view._showButton("changingEnds");
         }).bind(this));
 
@@ -37,6 +38,7 @@ $.widget("perfectLongBowLib.basketballNotepad", {
                 players: this.view.getPlayersOnTheGround()
             });
             this.view._showButton("changingStarts");
+            this.view._showButton("statistics");
             this.view._hideButton("changingEnds");
             this.view.switchHandlersForPlaying();
             this.timeForChanging = undefined;
