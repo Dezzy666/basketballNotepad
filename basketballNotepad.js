@@ -47,6 +47,11 @@ $.widget("perfectLongBowLib.basketballNotepad", {
             this.view.clearWorkPlace();
         }).bind(this));
 
+        this.view.viewEvents.addEventListener("statisticsButtonPressed", (function () {
+            this.view.showPlayersList(this.data.getPlayersList(), this.view.showPlayerDataHandler);
+
+        }).bind(this));
+
         this.view.viewEvents.addEventListener("exportDataDemand", (function () {
             this.data.exportDataInLink("exportMatch.json");
         }).bind(this));

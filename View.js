@@ -249,6 +249,8 @@ View.prototype.clearWorkPlace = function () {
 /**
 * Show players list
 *
+* @param {Object} List of players
+* @param {Function} On click handler
 * @method sthowPlayersList
 * @author Jan Herzan
 */
