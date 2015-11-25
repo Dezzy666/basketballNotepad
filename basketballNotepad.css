@@ -413,7 +413,7 @@ body {
     }
 
     .siteMenuButton {
-        margin-top: 9px;
+        margin-top: 25px; /* After adding "others" button, change to 9px. */
         margin-left: 5px;
     }
 

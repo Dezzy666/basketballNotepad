@@ -111,26 +111,6 @@ Data.prototype.loadDataFromJSON = function (data) {
 };
 
 /**
-* Loads data from JSON and save it without changing.
-*
-*@method loadCompleteDataFromJSON
-*@authro Jan Herzan
-*@param {String} data
-*@return If data was loaded successfully
-*/
-Data.prototype.loadCompleteDataFromJSON = function (data) {
-    var transformedData;
-    try {
-        transformedData = jQuery.parseJSON(data);
-    } catch (e) {
-        console.log(e);
-        return false;
-    }
-
-    this.data = transformedData.players;
-}
-
-/**
 * Creates data for one player
 *
 * @method createPlayer
@@ -289,5 +269,4 @@ Data.prototype.exportDataInLink = function (filename) {
     file.style.display = "none";
     document.body.appendChild(file);
     file.click();
-
 };

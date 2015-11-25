@@ -212,7 +212,7 @@ View.prototype.initializeAfterDataLoaded = function (playersList) {
     this._showButton("endOfGame");
     this._showButton("changingEnds");
     this._showButton("statistics");
-    this._showButton("others");
+    // this._showButton("others");
 };
 
 /**
@@ -354,7 +354,7 @@ View.prototype.switchPositionOfPlayerButtonHandler = function (e) {
     e.preventDefault();
 
     if ($('#' + e.currentTarget.id).parent()[0].id === this.prefix + 'placeForPlayers') {
-        if ($('#' + this.prefix + 'siteMenu').children().size() < 6) {
+        if ($('#' + this.prefix + 'siteMenu').children().size() < 5) { //// TODO: Edit this after adding more buttons.
             $('#' + this.prefix + 'siteMenu').append(currentElement);
             this.changeButtonClassesAsShadeFromDeck(currentElement);
             this.changeButtonClassesToNormalButton();
@@ -370,13 +370,11 @@ View.prototype.switchPositionOfPlayerButtonHandler = function (e) {
 
 View.prototype.sortNumbersAgainstNode = function (node) {
     var siblings = node.siblings();
-    console.log(siblings);
     var pointer = siblings.length - 1;
-    while (pointer > 0
+    while (pointer >= 0
         && !$("#" + siblings[pointer].id).hasClass("Other")
         && $("#" + siblings[pointer].id).data('playerNumber') > node.data('playerNumber')) {
         node.after($("#" + siblings[pointer].id));
-        console.log(siblings[pointer].id);
         pointer--;
     }
 }
@@ -699,9 +697,10 @@ View.prototype._insertMainMenu = function () {
 View.prototype._insertSiteMenu = function () {
     this.parentElement.append('<div id="' + this.prefix + 'siteMenu" class="siteMenu siteMenuDimension"></div>');
     this.siteMenu = $('#' + this.prefix + 'siteMenu');
-    this.siteMenu.append('<div class="Other" id="' + this.prefix + 'others">Další</div>');
-    this.buttonOthers = $("#" + this.prefix + "others");
-    this._hideButton("others");
+    //// TODO: Add aditional functionality.
+    //// this.siteMenu.append('<div class="Other" id="' + this.prefix + 'others">Další</div>');
+    //// this.buttonOthers = $("#" + this.prefix + "others");
+    //// this._hideButton("others");
 };
 
 /**

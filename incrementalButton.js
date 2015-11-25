@@ -67,5 +67,4 @@ $.widget("basketballNotepad.incrementalButton", {
         this.options.value = value;
         this.element.html(this.options.value);
     }
-
 });
