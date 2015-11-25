@@ -271,11 +271,11 @@ View.prototype.createSolutionSite = function () {
     this.workPlace.append('<div class="solution opponentWonSolution" id="' + this.prefix + 'OpponentWonSolution"><p>Soupeř</p> vyhrál rozskok</div>');
 
     $("#" + this.prefix + "WeWonSolution").on("click", (function (params) {
-        this.viewEvents.fireEvent("solutionDone", {team: "A"});
+        this.viewEvents.fireEvent("solutionDone", {team: 1});
     }).bind(this));
 
     $("#" + this.prefix + "OpponentWonSolution").on("click", (function (params) {
-        this.viewEvents.fireEvent("solutionDone", { team: "B" });
+        this.viewEvents.fireEvent("solutionDone", { team: 2 });
     }).bind(this));
 }
 

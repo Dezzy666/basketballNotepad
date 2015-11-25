@@ -32,7 +32,7 @@ $.widget("perfectLongBowLib.basketballNotepad", {
         }).bind(this));
 
         this.view.viewEvents.addEventListener("changingEndsButtonPressed", (function () {
-            this.data.addDataIntoTableForTeam("A", {
+            this.data.addDataIntoTableForTeam(1, {
                 event: "changing",
                 time: this.timeForChanging,
                 players: this.view.getPlayersOnTheGround()

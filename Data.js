@@ -25,13 +25,13 @@ function Data() {
 *
 * @method setDefaultSolution
 * @author Jan Herzan
-* @param{String} "A" for out team, "B" for opponents team
+* @param{String} 1 for out team, 1 for opponents team
 */
 Data.prototype.setDefaultSolution = function (winnerOfSolution) {
     this.nextSolution = winnerOfSolution;
-    this.addDataIntoTableForTeam("A", {
+    this.addDataIntoTableForTeam(1, {
         event: "firstSolution",
-        win: (winnerOfSolution === "A")
+        win: (winnerOfSolution === 1)
     });
     this.swapSolutionTeam();
 }
@@ -45,11 +45,11 @@ Data.prototype.setDefaultSolution = function (winnerOfSolution) {
 */
 Data.prototype.swapSolutionTeam = function (players) {
     switch (this.nextSolution) {
-        case "A":
-            this.nextSolution = "B";
+        case 1:
+            this.nextSolution = 2;
             break;
-        case "B":
-            this.nextSolution = "A";
+        case 2:
+            this.nextSolution = 1;
             break;
         default:
             throw new RuntimeExceptoion("Unknow team");
